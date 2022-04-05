@@ -18,7 +18,7 @@ class _productState extends State<product> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final detailsmenu = Provider.of<api_calls>(context);
-
+    var imgurl = 'https://dnpprojects.com/demo/comshop/public/storage/restaurant/menu/';
     return Scaffold(
       body: Column(
         children: [
@@ -72,24 +72,83 @@ class _productState extends State<product> with TickerProviderStateMixin {
                           ),
                         ),
                       ),
-                      body: ListView.builder(
-                        
+                      body:
+                      GridView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
                           itemCount: s.data['getRest']['menuswith_cat'].length,
-                          itemBuilder: (ctx, i) {
-                            menu_id = s.data['getRest']['menuswith_cat']
-                            [i]['category_id'];
-                            return Container(
-                              child: cate_id == menu_id?
-                              Text(s.data['getRest']['menuswith_cat'][i]
-                                  ['title']):Container(),
-                            );
-                          })),
+                          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 180,
+                              childAspectRatio:5/4,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10),
+
+
+                          itemBuilder: (BuildContext context, int i) {
+                            menu_id = s.data['getRest']['menuswith_cat'][i]
+                                       ['category_id'];
+                            print( imgurl+s.data['getRest']['menuswith_cat'][i]
+                            ['image']);
+                            return cate_id == menu_id? Container(
+                                padding: EdgeInsets.only(
+                                    left: 10, right: 15, top: 10, bottom: 10),
+                                height: 130,
+                                width: 145,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                        imgurl+s.data['getRest']['menuswith_cat'][i]
+                                    ['image']),
+
+                                  ),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Xtream Duo Box ',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: Container(
+                                        width: 70,
+                                        height: 30,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(22),
+                                        ),
+                                        child: Center(child: Text(s.data['getRest']['menuswith_cat'][i]
+                                        ['description'] )),
+                                      ),
+                                    ),
+                                  ],
+                                )):Container();
+                          })
+                      // ListView.builder(
+                      //     itemCount: s.data['getRest']['menuswith_cat'].length,
+                      //     itemBuilder: (ctx, i) {
+                      //       menu_id = s.data['getRest']['menuswith_cat'][i]
+                      //           ['category_id'];
+                      //       return Container(
+                      //         child: cate_id == menu_id
+                      //             ? Text(s.data['getRest']['menuswith_cat'][i]
+                      //                 ['title'])
+                      //             : Container(),
+                      //       );
+                      //     })
+                  ),
                 );
               }
               if (s.hasError) print(s.error.toString());
               return Center(
                   child: Text(s.hasError ? s.error.toString() : "Loading..."));
             },
+
             // FutureBuilder(
             //     future: detailsmenu.details_product(widget.id),
             //     builder: (context, AsyncSnapshot snapshot){
