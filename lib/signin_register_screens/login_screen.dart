@@ -229,9 +229,9 @@ class _login_screenState extends State<login_screen> {
                               ),
                             ),
                             onPressed: () {
-                              // provider.login(email.text, password.text);
-                              // print(email.value);
-                              // print(password.text);
+                              provider.login(email.text, password.text);
+                              print(email.value);
+                              print(password.text);
                               Navigator.push(
                                 context,
                                 _createRoute(),

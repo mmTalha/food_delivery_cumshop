@@ -23,8 +23,6 @@ class _tabbarState extends State<tabbar> {
     categories(),
     orders(),
     Profile(),
-
-
   ];
   void onTappedBar(int index)
   {

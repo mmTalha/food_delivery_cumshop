@@ -1,9 +1,14 @@
+
 import 'package:flutter/material.dart';
 import 'package:food_app/Tabbar_screens/dashboard.dart';
 import 'package:food_app/Tabbar_screens/tabbar_screen.dart';
 import 'package:food_app/provider/api_calls.dart';
+import 'package:food_app/provider/cartprovider.dart';
+import 'package:food_app/provider/locations.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_places_flutter/google_places_flutter.dart';
+import 'package:google_places_flutter/model/prediction.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -55,11 +60,19 @@ class find_resturent extends StatelessWidget {
     Placemark place = placemarks[0];
     Address = '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
      print(Address);
+    locate =  '${place.subLocality}';
+    print(locate);
   }
-    String Address = 'search';
-  @override
+  String Address = 'search';
+  String locate = '';
+    final TextEditingController address = TextEditingController();
+
+
+    @override
   Widget build(BuildContext context) {
     final menu = Provider.of<api_calls>(context);
+    final locationservices_provider = Provider.of<location_provider>(context);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -106,11 +119,11 @@ class find_resturent extends StatelessWidget {
                 final latlong  = prefs.getDouble('longtitude');
                 GetAddressFromLatLong(position);
                 print(latlong);
-                 menu.menu();
+                 menu.menuitems();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (BuildContext context) => tabbar(latitude: position.longitude,longtitude: position.latitude,)),
+                      builder: (BuildContext context) => tabbar(latitude: locate,longtitude: position.latitude,)),
                 );
               },
               child: Container(
@@ -151,30 +164,75 @@ class find_resturent extends StatelessWidget {
               ),
             ),
             width: 310,
-            child: TextField(
-              keyboardType: TextInputType.phone,
-              decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.add_location),
-                  prefixStyle: TextStyle(color: Colors.grey),
-                  hintText: 'Enter a New Address',
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: BorderSide(
-                        color:  Color.fromRGBO(242, 242, 242, 1),
-                      )),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: BorderSide(
-                        color:  Color.fromRGBO(242, 242, 242, 1),
-                      )),
-                  errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: BorderSide(color: Colors.red)),
-                  focusedErrorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: BorderSide(color: Colors.red))),
+            child: GooglePlaceAutoCompleteTextField(
+                textEditingController: address,
+                googleAPIKey: "AIzaSyBhrmU2VaNQP3P27wetiynn6UR_qfN47Xg",
+                inputDecoration: InputDecoration(
+                    prefixIcon: Icon(Icons.add_location),
+                    prefixStyle: TextStyle(color: Colors.grey),
+                    hintText: 'Enter a New Address',
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: BorderSide(
+                          color:  Color.fromRGBO(242, 242, 242, 1),
+                        )),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: BorderSide(
+                          color:  Color.fromRGBO(242, 242, 242, 1),
+                        )),
+                    errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: BorderSide(color: Colors.red)),
+                    focusedErrorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: BorderSide(color: Colors.red)),
+                ),
+                debounceTime: 800 ,// default 600 ms,
+                 isLatLngRequired:true,// if you required coordinates from place detail
+                getPlaceDetailWithLatLng: (Prediction prediction) {
+                  // this method will return latlng with place detail
+                  print("placeDetails" + prediction.lat.toString()+ prediction.lng.toString());
+                }, // this callback is called when isLatLngRequired is true
+                itmClick: (Prediction prediction) {
+                  address.text=prediction.description!;
+                  address.selection = TextSelection.fromPosition(TextPosition(offset: prediction.description!.length));
+                }
             ),
           ),
+
+          // Container(
+          //   decoration: BoxDecoration(
+          //     color:  Color.fromRGBO(242, 242, 242, 1),
+          //     borderRadius: BorderRadius.all(
+          //       Radius.circular(10),
+          //     ),
+          //   ),
+          //   width: 310,
+          //   child: TextField(
+          //     keyboardType: TextInputType.phone,
+          //     decoration: InputDecoration(
+          //         prefixIcon: Icon(Icons.add_location),
+          //         prefixStyle: TextStyle(color: Colors.grey),
+          //         hintText: 'Enter a New Address',
+          //         enabledBorder: OutlineInputBorder(
+          //             borderRadius: BorderRadius.circular(5),
+          //             borderSide: BorderSide(
+          //               color:  Color.fromRGBO(242, 242, 242, 1),
+          //             )),
+          //         focusedBorder: OutlineInputBorder(
+          //             borderRadius: BorderRadius.circular(5),
+          //             borderSide: BorderSide(
+          //               color:  Color.fromRGBO(242, 242, 242, 1),
+          //             )),
+          //         errorBorder: OutlineInputBorder(
+          //             borderRadius: BorderRadius.circular(5),
+          //             borderSide: BorderSide(color: Colors.red)),
+          //         focusedErrorBorder: OutlineInputBorder(
+          //             borderRadius: BorderRadius.circular(5),
+          //             borderSide: BorderSide(color: Colors.red))),
+          //   ),
+          // ),
         ],
       ),
     );

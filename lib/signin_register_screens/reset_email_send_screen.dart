@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:food_app/signin_register_screens/create_account_screen.dart';
 import 'package:food_app/signin_register_screens/login_screen.dart';
 
-
 class reset_email_screen extends StatelessWidget {
   const reset_email_screen({Key? key}) : super(key: key);
 
@@ -11,14 +10,11 @@ class reset_email_screen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () => Navigator.of(context).pop(),
           ),
-           elevation: 0.0,
-
-
+          elevation: 0.0,
         ),
         body: Container(
           padding: EdgeInsets.all(10),
@@ -26,35 +22,47 @@ class reset_email_screen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text( 'Reset email sent', style: TextStyle(color: Colors.black, fontSize: 34),),
-                SizedBox(height: 10,),
-                Text( 'We have sent a instructions email to ', style: TextStyle(color: Color.fromRGBO(134, 134, 134, 1), fontSize: 16),),
-                SizedBox(height: 5,),
+                Text(
+                  'Reset email sent',
+                  style: TextStyle(color: Colors.black, fontSize: 34),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'We have sent a instructions email to ',
+                  style: TextStyle(
+                      color: Color.fromRGBO(134, 134, 134, 1), fontSize: 16),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
                 RichText(
                     text: TextSpan(children: <TextSpan>[
-                      TextSpan(
-                        text: "Nawfazim@icloud.com ",
-
-
-                        style: TextStyle(color: Color.fromRGBO(134, 134, 134, 1), fontSize: 16),
-                      ),
-                      TextSpan(
-                        text: "Having problem? ",
-                        style: TextStyle(
-                          color: Color.fromRGBO(252, 186, 24, 1),
-                          fontSize: 16,
-                        ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => login_screen()),
-                            );
-                          },
-                      ),
-                    ])),
-                SizedBox(height: 30,),
+                  TextSpan(
+                    text: "Nawfazim@icloud.com ",
+                    style: TextStyle(
+                        color: Color.fromRGBO(134, 134, 134, 1), fontSize: 16),
+                  ),
+                  TextSpan(
+                    text: "Having problem? ",
+                    style: TextStyle(
+                      color: Color.fromRGBO(252, 186, 24, 1),
+                      fontSize: 16,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => login_screen()),
+                        );
+                      },
+                  ),
+                ])),
+                SizedBox(
+                  height: 30,
+                ),
                 Center(
                   child: Container(
                       height: 40,
@@ -76,14 +84,8 @@ class reset_email_screen extends StatelessWidget {
                               MaterialPageRoute(
                                   builder: (BuildContext context) =>
                                       create_acount_screen()),
-
                             );
-                          }
-
-
-
-                      )
-                  ),
+                          })),
                 ),
               ]),
         ));
