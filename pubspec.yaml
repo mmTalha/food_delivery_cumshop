@@ -83,7 +83,7 @@ flutter:
       - images/category1.png
       - images/burger.png
       - images/tacos.png
-
+      - images/details_product.png
       - images/Credit card.png
       - images/paypal.png
       - images/visa.png
