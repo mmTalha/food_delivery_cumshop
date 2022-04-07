@@ -680,7 +680,7 @@ class _dashboard_screenState extends State<dashboard_screen> {
                             );
                           }),
                         )
-                      : Container()),
+                      : Center(child: Text('no resturent registred on this location'),)),
             ],
           ),
         ),

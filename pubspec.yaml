@@ -51,6 +51,7 @@ dependencies:
 
 
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -92,6 +93,7 @@ flutter:
       - images/map.png
       - images/cashondelivery.png
       - images/rider.png
+      - images/loader.gif
 
 
 

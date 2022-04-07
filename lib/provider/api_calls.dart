@@ -81,7 +81,8 @@ class api_calls with ChangeNotifier {
 
     var datas = jsonDecode(response.body);
 
-    // print(datas);
+    print(datas);
+   
     return datas;
   }
 }
