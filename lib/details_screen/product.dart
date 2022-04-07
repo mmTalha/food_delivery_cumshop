@@ -12,13 +12,13 @@ class product extends StatefulWidget {
 }
 
 class _productState extends State<product> with TickerProviderStateMixin {
-  var cate_id;
-  var menu_id;
+  var menus_id;
+  var menus_ini;
 
   @override
   Widget build(BuildContext context) {
     final detailsmenu = Provider.of<api_calls>(context);
-    var imgurl = 'https://dnpprojects.com/demo/comshop/public/storage/restaurant/menu/';
+     var imgurl = 'https://dnpprojects.com/demo/comshop/public/storage/restaurant/menu/';
     return Scaffold(
       body: Column(
         children: [
@@ -34,6 +34,9 @@ class _productState extends State<product> with TickerProviderStateMixin {
               child: FutureBuilder(
             future: detailsmenu.details_product(widget.id),
             builder: (c, AsyncSnapshot s) {
+              //
+              menus_ini = s.data['categories'][0]['menu'];
+              //print(menus_ini[0]['price']);
               if (s.hasData) {
                 List<Tab> tabs = <Tab>[];
                 for (int i = 0; i < s.data['categories']!.length; i++) {
@@ -46,6 +49,7 @@ class _productState extends State<product> with TickerProviderStateMixin {
                   ));
                 }
                 return DefaultTabController(
+
                   length: s.data['categories'].length,
                   child: Scaffold(
                       appBar: PreferredSize(
@@ -53,16 +57,14 @@ class _productState extends State<product> with TickerProviderStateMixin {
                         child: Container(
                           height: 50,
                           child: TabBar(
+
                             onTap: (int) {
                               // print(s.data['categories'][int]['id']);
                               // print(s.data['getRest']['menuswith_cat'][int]
                               //     ['category_id']);
                               setState(() {
-                                cate_id = s.data['categories'][int]['id'];
-                                menu_id = s.data['getRest']['menuswith_cat']
-                                    [int]['category_id'];
-                                print(cate_id);
-                                print(menu_id);
+                                menus_id = s.data['categories'][int]['menu'];
+                                //print(s.data);
                               });
                             },
                             labelColor: Colors.black,
@@ -74,22 +76,18 @@ class _productState extends State<product> with TickerProviderStateMixin {
                       ),
                       body:
                       GridView.builder(
+
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: s.data['getRest']['menuswith_cat'].length,
+                          itemCount:menus_id==null?menus_ini.length:menus_id.length,
+
                           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                               maxCrossAxisExtent: 180,
                               childAspectRatio:5/4,
                               crossAxisSpacing: 10,
                               mainAxisSpacing: 10),
-
-
                           itemBuilder: (BuildContext context, int i) {
-                            menu_id = s.data['getRest']['menuswith_cat'][i]
-                                       ['category_id'];
-                            print( imgurl+s.data['getRest']['menuswith_cat'][i]
-                            ['image']);
-                            return cate_id == menu_id? Container(
+                            return Container(
                                 padding: EdgeInsets.only(
                                     left: 10, right: 15, top: 10, bottom: 10),
                                 height: 130,
@@ -97,8 +95,9 @@ class _productState extends State<product> with TickerProviderStateMixin {
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
                                     image: NetworkImage(
-                                        imgurl+s.data['getRest']['menuswith_cat'][i]
-                                    ['image']),
+                                        imgurl+(menus_id==null ? menus_ini[i]
+                                        ['image'] : menus_id[i]
+                                        ['image'])),
 
                                   ),
                                 ),
@@ -122,12 +121,13 @@ class _productState extends State<product> with TickerProviderStateMixin {
                                           color: Colors.white,
                                           borderRadius: BorderRadius.circular(22),
                                         ),
-                                        child: Center(child: Text(s.data['getRest']['menuswith_cat'][i]
-                                        ['description'] )),
+                                        child: Center(child: Text('${menus_id == null ? menus_ini[i]['price'].toString() : menus_id[i]['price'].toString() }' )
+                                        ),
                                       ),
                                     ),
                                   ],
-                                )):Container();
+                                ));
+
                           })
                       // ListView.builder(
                       //     itemCount: s.data['getRest']['menuswith_cat'].length,

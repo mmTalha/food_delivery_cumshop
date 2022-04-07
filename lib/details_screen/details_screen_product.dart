@@ -29,13 +29,7 @@ class _details_screen_productsState extends State<details_screen_products> {
     });
   }
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-    TabController? _controller;
-  int _selectedIndex = 0;
-  @override
-  void initState() {
-    super.initState();
-    _controller = TabController as TabController?;
-  }
+
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<cartprovider>(context);
@@ -166,30 +160,7 @@ class _details_screen_productsState extends State<details_screen_products> {
 
                       ],
                     ),
-                    DefaultTabController(
 
-                        length: 5,
-                    child:
-                    TabBar(
-                      controller: _controller,
-                      isScrollable: true,
-                      tabs: [
-                        Tab(child: Text('Flight')),
-                        Tab(child: Text('Train')),
-                        Tab(child: Text('Car')),
-                        Tab(child: Text('Cycle')),
-                        Tab(child: Text('Boat')),
-                      ],
-                    )),
-                    TabBarView(
-                      children: <Widget>[
-                        Icon(Icons.flight, size: 350),
-                        Icon(Icons.directions_transit, size: 350),
-                        Icon(Icons.directions_car, size: 350),
-                        Icon(Icons.directions_bike, size: 350),
-                        Icon(Icons.directions_boat, size: 350),
-                      ],
-                    ),
                     for (int i = 1; i <= 8; i++)
                       Column(
                         children: [

@@ -200,7 +200,7 @@ class _dashboard_screenState extends State<dashboard_screen> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  see_featured_partner_screen()),
+                                  details_screen_products()),
                         );
                       },
                       child: Text(
