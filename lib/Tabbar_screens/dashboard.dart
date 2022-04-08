@@ -199,8 +199,7 @@ class _dashboard_screenState extends State<dashboard_screen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  details_screen_products()),
+                              builder: (context) => details_screen_products()),
                         );
                       },
                       child: Text(
@@ -473,212 +472,225 @@ class _dashboard_screenState extends State<dashboard_screen> {
               ),
               FutureBuilder(
                   future: menuprovider.menuitems(),
-                  builder: (context,AsyncSnapshot  snapshot) =>
-                  snapshot.hasData
+                  builder: (context, AsyncSnapshot snapshot) => snapshot.hasData
                       ? Center(
                           child: ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: snapshot.data['data'].length,
-                            itemBuilder: (BuildContext context, int index) {
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: snapshot.data['data'].length,
+                              itemBuilder: (BuildContext context, int index) {
+                                var snap = snapshot.data['data'][index];
 
-                              var snap = snapshot.data['data'][index];
-
-                             return   Center(
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => product(
-                                          id: snap['id'],
-                                          name: snap['name'],
-                                        )),
-                                  );
-                                },
-                                child: Container(
-                                  margin: EdgeInsets.all(15),
-                                  width: 335,
-                                  height: 282,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(15.0),
-                                        child: Image.network(
-                                          '${menuprovider.imageurl}${snap['logo_img']}',
-                                          height: 200,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        '${snap['name']}',
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 20),
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Row(
+                                return Center(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => product(
+                                                  id: snap['id'],
+                                                  name: snap['name'],
+                                                )),
+                                      );
+                                    },
+                                    child: Container(
+                                      margin: EdgeInsets.all(15),
+                                      width: 335,
+                                      height: 282,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
-                                          Text(
-                                            '\$\$',
-                                            style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    134, 134, 134, 1),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400),
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(15.0),
+                                            child: Image.network(
+                                              '${menuprovider.imageurl}${snap['logo_img']}',
+                                              height: 200,
+                                            ),
                                           ),
                                           SizedBox(
-                                            width: 5,
+                                            height: 10,
                                           ),
                                           Text(
-                                            '.',
+                                            '${snap['name']}',
                                             style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    134, 134, 134, 1),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400),
+                                                color: Colors.black,
+                                                fontSize: 20),
                                           ),
                                           SizedBox(
-                                            width: 5,
+                                            height: 5,
                                           ),
-                                          Text(
-                                            'Chinese',
-                                            style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    134, 134, 134, 1),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                '\$\$',
+                                                style: TextStyle(
+                                                    color: Color.fromRGBO(
+                                                        134, 134, 134, 1),
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                '.',
+                                                style: TextStyle(
+                                                    color: Color.fromRGBO(
+                                                        134, 134, 134, 1),
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                'Chinese',
+                                                style: TextStyle(
+                                                    color: Color.fromRGBO(
+                                                        134, 134, 134, 1),
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                '.',
+                                                style: TextStyle(
+                                                    color: Color.fromRGBO(
+                                                        134, 134, 134, 1),
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                'American',
+                                                style: TextStyle(
+                                                    color: Color.fromRGBO(
+                                                        134, 134, 134, 1),
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                '.',
+                                                style: TextStyle(
+                                                    color: Color.fromRGBO(
+                                                        134, 134, 134, 1),
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                'Deshi food',
+                                                style: TextStyle(
+                                                    color: Color.fromRGBO(
+                                                        134, 134, 134, 1),
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                            ],
                                           ),
                                           SizedBox(
-                                            width: 5,
+                                            height: 5,
                                           ),
-                                          Text(
-                                            '.',
-                                            style: TextStyle(
+                                          Row(
+                                            children: [
+                                              Text(
+                                                '4.3 ',
+                                                style: TextStyle(
+                                                    color: Color.fromRGBO(
+                                                        134, 134, 134, 1),
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Icon(
+                                                Icons.star,
+                                                size: 11,
+                                                color: Color.fromRGBO(
+                                                    252, 186, 24, 1),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                '200+ Ratings',
+                                                style: TextStyle(
+                                                    color: Color.fromRGBO(
+                                                        134, 134, 134, 1),
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Icon(
+                                                Icons.access_alarm_rounded,
+                                                size: 11,
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                '25 Min',
+                                                style: TextStyle(
+                                                    color: Color.fromRGBO(
+                                                        134, 134, 134, 1),
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Icon(
+                                                Icons.person,
+                                                size: 11,
                                                 color: Color.fromRGBO(
                                                     134, 134, 134, 1),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400),
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            'American',
-                                            style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    134, 134, 134, 1),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400),
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            '.',
-                                            style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    134, 134, 134, 1),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400),
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            'Deshi food',
-                                            style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    134, 134, 134, 1),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400),
-                                          ),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                'Free',
+                                                style: TextStyle(
+                                                    color: Color.fromRGBO(
+                                                        134, 134, 134, 1),
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                            ],
+                                          )
                                         ],
                                       ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            '4.3 ',
-                                            style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    134, 134, 134, 1),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400),
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            size: 11,
-                                            color:
-                                                Color.fromRGBO(252, 186, 24, 1),
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            '200+ Ratings',
-                                            style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    134, 134, 134, 1),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400),
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Icon(
-                                            Icons.access_alarm_rounded,
-                                            size: 11,
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            '25 Min',
-                                            style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    134, 134, 134, 1),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400),
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Icon(
-                                            Icons.person,
-                                            size: 11,
-                                            color:
-                                                Color.fromRGBO(134, 134, 134, 1),
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            'Free',
-                                            style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    134, 134, 134, 1),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400),
-                                          ),
-                                        ],
-                                      )
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                            );
-                          }),
+                                );
+                              }),
                         )
                       : Center(child: Text('no resturent registred on this location'),)),
             ],
