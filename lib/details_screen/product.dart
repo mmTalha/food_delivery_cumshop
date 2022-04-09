@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/details_screen/details_screen_product.dart';
 import 'package:food_app/provider/api_calls.dart';
 import 'package:provider/provider.dart';
 
 class product extends StatefulWidget {
-  product({Key? key, this.name, this.id}) : super(key: key);
+  product({Key? key, this.name, this.id, this.img}) : super(key: key);
   final name;
   final id;
-
+  final img;
   @override
   _productState createState() => _productState();
 }
@@ -18,30 +19,30 @@ class _productState extends State<product> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final detailsmenu = Provider.of<api_calls>(context);
-    var imgurl =
-        'https://dnpprojects.com/demo/comshop/public/storage/restaurant/menu/';
+    var imgurl ='https://dnpprojects.com/demo/comshop/public/storage/restaurant/menu/';
+        
     return Scaffold(
       body: Column(
         children: [
           Container(
             height: 280,
             width: MediaQuery.of(context).size.width,
-            child: Image.asset(
-              'images/details_product.png',
+            child: Image.network(
+             widget.img,
               fit: BoxFit.cover,
             ),
           ),
           Expanded(
-              child: FutureBuilder(
-            future: detailsmenu.details_product(widget.id),
-            builder: (c, AsyncSnapshot s) {
-              //
-              menus_ini = s.data['categories'][0]['menu'];
-              //print(menus_ini[0]['price']);
+              child:
+              FutureBuilder(
+               future: detailsmenu.details_product(widget.id),
+              builder: (c, AsyncSnapshot s) {
+               //print(menus_ini[0]['price']);
               if (s.hasData) {
+                menus_ini = s.data['categories'][0]['menu'];
                 List<Tab> tabs = <Tab>[];
                 for (int i = 0; i < s.data['categories']!.length; i++) {
-                  print(s.data['categories'][i]['name']);
+                  // print(s.data['categories'][i]['name']);
                   tabs.add(Tab(
                     child: Text(
                       s.data['categories'][i]['name'],
@@ -52,6 +53,7 @@ class _productState extends State<product> with TickerProviderStateMixin {
                 return DefaultTabController(
                   length: s.data['categories'].length,
                   child: Scaffold(
+                    backgroundColor: Colors.white,
                       appBar: PreferredSize(
                         preferredSize: Size.fromHeight(30),
                         child: Container(
@@ -89,112 +91,75 @@ class _productState extends State<product> with TickerProviderStateMixin {
                                     crossAxisSpacing: 10,
                                     mainAxisSpacing: 10),
                             itemBuilder: (BuildContext context, int i) {
-                              return Container(
-                                  padding: EdgeInsets.only(
-                                      left: 10, right: 15, top: 10, bottom: 10),
-                                  height: 130,
-                                  width: 145,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    image: DecorationImage(
-                                      image: NetworkImage(imgurl +
-                                          (menus_id == null
-                                              ? menus_ini[i]['image']
-                                              : menus_id[i]['image'])),
-                                      fit: BoxFit.cover,
+                              return GestureDetector(
+                                onTap: (){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>details_screen_products(
+                                         id:  menus_id == null? menus_ini[i]['id'] : menus_id[i]['id'],
+                                        image:imgurl + (menus_id == null ? menus_ini[i]['image'] : menus_id[i]['image']),
+                                        ) ),
+                                  );
+                                },
+                                child: Container(
+                                    padding: EdgeInsets.only(
+                                        left: 10, right: 15, top: 10, bottom: 10),
+                                    height: 130,
+                                    width: 145,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      image: DecorationImage(
+                                        image: NetworkImage(imgurl + (menus_id == null ? menus_ini[i]['image'] : menus_id[i]['image'])),
+
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'Xtream Duo Box ',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w400),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.bottomRight,
-                                        child: Container(
-                                          width: 70,
-                                          height: 30,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(22),
-                                          ),
-                                          child: Center(
-                                              child: Text(
-                                                  '${menus_id == null ? menus_ini[i]['price'].toString() : menus_id[i]['price'].toString()}')),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          '${menus_id == null ? menus_ini[i]['title'] : menus_id[i]['title']}',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.bold),
                                         ),
-                                      ),
-                                    ],
-                                  ));
+                                        Align(
+                                          alignment: Alignment.bottomRight,
+                                          child: Container(
+                                            width: 70,
+                                            height: 30,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(22),
+                                            ),
+                                            child: Center(
+                                                child: Text(
+                                                    '${menus_id == null ? menus_ini[i]['price'].toString() : menus_id[i]['price'].toString()}')),
+                                          ),
+                                        ),
+                                      ],
+                                    )),
+                              );
                             }),
                       )
-                      // ListView.builder(
-                      //     itemCount: s.data['getRest']['menuswith_cat'].length,
-                      //     itemBuilder: (ctx, i) {
-                      //       menu_id = s.data['getRest']['menuswith_cat'][i]
-                      //           ['category_id'];
-                      //       return Container(
-                      //         child: cate_id == menu_id
-                      //             ? Text(s.data['getRest']['menuswith_cat'][i]
-                      //                 ['title'])
-                      //             : Container(),
-                      //       );
-                      //     })
+
                       ),
                 );
               }
               if (s.hasError) print(s.error.toString());
               return Center(
-                  child: Text(s.hasError ? s.error.toString() : "Loading..."));
+                  child: Image.asset('images/loader.gif'));
             },
 
-            // FutureBuilder(
-            //     future: detailsmenu.details_product(widget.id),
-            //     builder: (context, AsyncSnapshot snapshot){
-            //       snapshot.hasData
-            //
-            //           ?   DefaultTabController(
-            //         length: snapshot.data['categories'].length,
-            //         child: new Scaffold(
-            //           appBar: new PreferredSize(
-            //             preferredSize: Size.fromHeight(
-            //                 MediaQuery.of(context).size.height),
-            //             child: new Container(
-            //                 height: 50.0,
-            //                 child: new TabBar(
-            //                     indicatorColor: Colors.orange,
-            //                     onTap: (int) {
-            //                       int++;
-            //                       print(int);
-            //                     },
-            //                     labelColor: Colors.black,
-            //                     isScrollable: true,
-            //                     tabs:[
-            //                       snapshot.data['name']['categories']
-            //                     ] )
-            //
-            //
-            //             ),
-            //           ),
-            //           body: TabBarView(
-            //
-            //             children: [
-            //               Icon(Icons.directions_car),
-            //               Icon(Icons.directions_car),
-            //             ],
-            //           ),
-            //         ),
-            //       )
-            //           : Container();})),
-          )),
+
+          )
+          ),
         ],
       ),
     );

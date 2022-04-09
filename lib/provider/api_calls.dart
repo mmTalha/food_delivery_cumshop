@@ -81,8 +81,32 @@ class api_calls with ChangeNotifier {
 
     var datas = jsonDecode(response.body);
 
-    print(datas);
+
    
+    return datas;
+  }
+  Future deatils_varient(id) async {
+
+    final _prefs = SharedPreferences.getInstance();
+    final SharedPreferences prefs = await _prefs;
+    final gettoken = prefs.getString('new');
+    final longtitude = prefs.getDouble('longtitude');
+    final latitude = prefs.getDouble('latitude');
+    var userHeader = {
+      "Accept": "application/json",
+      'Authorization': 'Bearer $gettoken',
+    };
+    final response = await http.get(
+      Uri.parse(
+        '${url}productDetail/$id',
+      ),
+      headers: userHeader,
+    );
+
+    var datas = jsonDecode(response.body);
+
+    print(datas);
+
     return datas;
   }
 }

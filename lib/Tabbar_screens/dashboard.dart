@@ -490,6 +490,7 @@ class _dashboard_screenState extends State<dashboard_screen> {
                                             builder: (context) => product(
                                                   id: snap['id'],
                                                   name: snap['name'],
+                                                  img: '${menuprovider.imageurl}${snap['logo_img']}',
                                                 )),
                                       );
                                     },
