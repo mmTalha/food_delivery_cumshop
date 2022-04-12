@@ -105,8 +105,51 @@ class api_calls with ChangeNotifier {
 
     var datas = jsonDecode(response.body);
 
+    // print(datas);
+
+    return datas;
+  }
+  Future add_to_cart(product_id,restaurant_id,variant_id,price,quantity) async {
+    final _prefs = SharedPreferences.getInstance();
+    final SharedPreferences prefs = await _prefs;
+    final gettoken = prefs.getString('new');
+    final longtitude = prefs.getDouble('longtitude');
+    final latitude = prefs.getDouble('latitude');
+    var userHeader = {
+      "Accept": "application/json",
+      'Authorization': 'Bearer $gettoken',
+    };
+    final response = await http.post(
+      Uri.parse(
+        '${url}addCart?product_id=$product_id&restaurant_id=$restaurant_id&variant_id=$variant_id&price=$price&quantity=$quantity',
+      ),
+      headers: userHeader,
+    );
+    var datas = jsonDecode(response.body);
+    print(datas);
+    notifyListeners();
+    return datas;
+  }
+  Future get_cart( ) async {
+    final _prefs = SharedPreferences.getInstance();
+    final SharedPreferences prefs = await _prefs;
+    final gettoken = prefs.getString('new');
+    final longtitude = prefs.getDouble('longtitude');
+    final latitude = prefs.getDouble('latitude');
+    var userHeader = {
+      "Accept": "application/json",
+      'Authorization': 'Bearer $gettoken',
+    };
+    final response = await http.get(
+      Uri.parse(
+        '${url}ShowAllCart',
+      ),
+      headers: userHeader,
+    );
+    var datas = jsonDecode(response.body);
     print(datas);
 
     return datas;
   }
+
 }

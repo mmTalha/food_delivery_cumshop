@@ -47,8 +47,7 @@ class _details_screen_productsState extends State<details_screen_products> {
             //print(menus_ini[0]['price']);
             if (snap.hasData) {
               int _value = 1;
-           print(widget.id);
-           print( snap.data['productDetail'][0]['variant'][0]['name']);
+          var data =  snap.data['productDetail'][0]['variant'];
 
               return
                 Container(
@@ -133,41 +132,31 @@ class _details_screen_productsState extends State<details_screen_products> {
                               physics: NeverScrollableScrollPhysics(),
                               itemCount: snap.data['productDetail'][0]['variant'].length,
                               itemBuilder: (ctx,i){
-
                             return   Column(
                               children: [
-                                ListTile(
-                                     dense: true,
-                                  contentPadding: EdgeInsets.only(
-                                      left: 0.0, right: 0.0, bottom: 0.0),
-                                  title: Text(
-                                    snap.data['productDetail'][0]['variant'][i]['name'],
-                                  ),
-                                  leading:
-                                  Radio(
-                                    value: 0,
-                                    groupValue: snap.data['productDetail'][0]['variant'][0]['id'],
-                                    activeColor: Color.fromRGBO(252, 186, 24, 1),
 
-                                    onChanged: ( value) {
-                                      setState(() {
-                                        snap.data['productDetail'][0]['variant'][0]['id'] = value;
-                                        print('new${value}');
-                                      });
-                                    },
+                                  ListTile(
+                                    title: Text(
+                                      '${snap.data['productDetail'][0]['variant'][i]['name']}',
+
+                                    ),
+                                    leading: Radio(
+                                      value: i,
+                                      groupValue: i,
+                                      onChanged: i == 5 ? null : (int? value) {
+                                        setState(() {
+                                          _value = value!;
+                                        });
+                                      },
+                                    ),
                                   ),
-                                ),
                                 Divider()
                               ],
                             );
                           }),
-
                             SizedBox(
                               height: 15,
                             ),
-
-
-
                             SizedBox(height: 5,),
                             new Container(
                               child: new Center(
@@ -241,12 +230,11 @@ class _details_screen_productsState extends State<details_screen_products> {
                                 animationDuration:Duration(seconds: 1) ,
                                 onPressed: () {
                                   provider.cartbadge();
-
+                                  varient.add_to_cart(23, 1, 5, 1023, 3);
                                   final snackBar = SnackBar(
-
                                       elevation: 6.0,
                                       backgroundColor:Color.fromRGBO(252, 186, 24, 1) ,
-                                      behavior: SnackBarBehavior. floating,
+                                      behavior: SnackBarBehavior.floating,
                                       content: Row(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -274,17 +262,8 @@ class _details_screen_productsState extends State<details_screen_products> {
                                               child: Text('View cart')),
                                           Text('RS:25676'),
                                         ],
-
                                       ));
-
                                   _scaffoldKey.currentState!.showSnackBar(snackBar);
-                                  // Navigator.push (
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //       builder: (BuildContext context) =>
-                                  //           checkout_order_screens()),
-
-
                                 }
 
 
