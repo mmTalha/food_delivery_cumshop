@@ -33,17 +33,23 @@ class _details_screen_productsState extends State<details_screen_products> {
   }
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  var iid;
   int _value = 0;
   var _griup = [-1];
   String _currText = '';
   bool _isChecked = true;
-  var selectedIndexes = [];
+  var isSelected;
+  var _selectedBox;
+  final Set _saved = Set();
+  List _selectedIndexs = [0];
+  // var a = 0;
+  @override
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<cartprovider>(context);
     final varient = Provider.of<api_calls>(context);
 
-    var id;
+    //var id;
     return Scaffold(
       key: _scaffoldKey,
       body: SingleChildScrollView(
@@ -54,7 +60,7 @@ class _details_screen_productsState extends State<details_screen_products> {
           if (snap.hasData) {
             int _value = 1;
             var data = snap.data['productDetail'][0]['variant'];
-
+            //   print(data);
             return Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,76 +145,66 @@ class _details_screen_productsState extends State<details_screen_products> {
                             physics: NeverScrollableScrollPhysics(),
                             itemCount:
                                 snap.data['productDetail'][0]['variant'].length,
-                            itemBuilder: (ctx, i) {
-                              id = i;
-                              var a = snap.data['productDetail'][0]['variant']
-                                  [i]['name'];
+                            itemBuilder: (ctx, index) {
+                              //   a++;
+                              //   iid = [index];
+                              var ab = snap.data['productDetail'][0]['variant']
+                                  [index]['name'];
+                              // final _isSelected =
+                              //     _selectedIndexs.contains(index);
+                              return
+                                  //  GestureDetector(
+                                  //     onTap: () {
+                                  //       setState(() {
+                                  //         print(index);
+                                  //         var d = index == a++;
+                                  //         print(d);
 
-                              return Column(
+                                  //           // if (index == a++) {
+                                  //           //   _selectedIndexs.remove(index);
+                                  //           // }
+                                  //           // if (_isSelected) {
+                                  //           //   _selectedIndexs.remove(index);
+                                  //           // } else {
+                                  //           //   _selectedIndexs.add(index);
+                                  //           // }
+                                  //           print(_selectedIndexs);
+                                  //         }
+                                  //       );
+                                  //     },
+                                  //     child: Padding(
+                                  //       padding: const EdgeInsets.all(1.0),
+                                  //       child: Container(
+                                  //         color: _isSelected ? Colors.red : null,
+                                  //         child: ListTile(title: Text(ab)),
+                                  //       ),
+                                  //     ));
+
+                                  ListView(
+                                shrinkWrap: true,
                                 children: [
-                                  // RadioListTile(
-                                  //   groupValue: _isRadioSelected,
-                                  //   value: 2,
-                                  //   activeColor: Colors.black,
-                                  //   onChanged: (valuea) {
-                                  //     setState(() {
-                                  //       id = valuea;
-                                  //       print(id);
-                                  //       print(snap.data['productDetail'][0]
-                                  //           ['variant'][i]['name']);
-                                  //     });
-                                  //   },
-                                  //   title: Text(
-                                  //     '${snap.data['productDetail'][0]['variant'][i]['name']}',
-                                  //   ),
-                                  // ),
-
-                                  CheckboxListTile(
-                                    value: selectedIndexes.contains(i),
-                                    onChanged: (a) {
-                                      if (selectedIndexes.contains(i)) {
-                                        selectedIndexes.remove(i); // unselect
-                                      } else {
-                                        print([i]);
-                                        print(snap.data['productDetail'][0]
-                                            ['variant'][i]['name']);
-                                        selectedIndexes.add(i); // select
-                                        print(selectedIndexes);
-                                      }
-                                      setState(() {});
-                                    },
-                                    checkColor: Colors.greenAccent,
-                                    activeColor: Colors.black,
-                                    title: Text(a.toString()),
-                                  ),
-                                  // Checkbox(
-                                  //   value: _isChecked,
-                                  //   onChanged: (val) {
-                                  //     setState(() {
-                                  //       _isChecked = val!;
-                                  //       if (val == true) {
-                                  //         _currText = a;
-                                  //         print([i]);
-                                  //         print(snap.data['productDetail']
-                                  //             [0]['variant'][i]['name']);
-                                  //       }
-                                  //     });
-                                  //   },
-                                  // ),
-
-                                  // Radio(
-                                  //   activeColor: Colors.red,
-                                  //   value: [i],
-                                  //   groupValue: _value,
-                                  //   onChanged: ( va) {
-                                  //     setState(() {
-                                  //       print([i]);
-                                  //       print(snap.data['productDetail'][0]
-                                  //           ['variant'][i]['name']);
-                                  //       _value = va;
-                                  //     });
-                                  //   },
-                                  // ),
+                                  Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ListTile(
+                                          //   isThreeLine: true,
+                                          leading: Checkbox(
+                                            value: _saved.contains(index),
+                                            onChanged: (val) {
+                                              setState(() {
+                                                print([index]);
+                                                print(snap.data['productDetail']
+                                                        [0]['variant'][index]
+                                                    ['name']);
+                                                if (val == true) {
+                                                  _saved.add(index);
+                                                } else {
+                                                  _saved.remove(index);
+                                                }
+                                                //   print(a);
+                                              });
+                                            },
+                                          ),
+                                          title: Text(ab.toString()))),
                                 ],
                               );
                             }),
