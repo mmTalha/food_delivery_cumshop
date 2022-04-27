@@ -35,11 +35,18 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: Color.fromRGBO(250, 249, 249, 1),
-        fontFamily: 'SF-pro',
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          primary: Colors.white,
+          secondary: Colors.black,
+
+          // or from RGB
+        ),
+        textTheme: const TextTheme(bodyText2: TextStyle(color: Colors.black)),
+        scaffoldBackgroundColor: Colors.white,
+        // primaryColor: Colors.amber,
         // primaryColor:  Color.fromRGBO(245, 245, 245, 1),
         //
-        backgroundColor: Color.fromRGBO(250, 249, 249, 1),
+        // backgroundColor: Color.fromRGBO(250, 249, 249, 1),
       ),
       //home: details_screen_products()
       home: IntroPage(),

@@ -128,7 +128,10 @@ class _dashboard_screenState extends State<dashboard_screen> {
                       badgeColor: Color.fromRGBO(252, 186, 24, 1),
                       animationType: BadgeAnimationType.slide,
                       badgeContent: Text('${badge.cartvalue}'),
-                      child: Image.asset('images/carticon.png'))),
+                      child: Image.asset(
+                        'images/carticon.png',
+                        color: Color.fromRGBO(252, 186, 24, 1),
+                      ))),
             ),
           )
         ],
@@ -490,7 +493,8 @@ class _dashboard_screenState extends State<dashboard_screen> {
                                             builder: (context) => product(
                                                   id: snap['id'],
                                                   name: snap['name'],
-                                                  img: '${menuprovider.imageurl}${snap['logo_img']}',
+                                                  img:
+                                                      '${menuprovider.imageurl}${snap['logo_img']}',
                                                 )),
                                       );
                                     },
@@ -693,7 +697,10 @@ class _dashboard_screenState extends State<dashboard_screen> {
                                 );
                               }),
                         )
-                      : Center(child: Text('no resturent registred on this location'),)),
+                      : Center(
+                          child:
+                              Text('no resturent registred on this location'),
+                        )),
             ],
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:food_app/checkout_screens/checkout_order_screen.dart';
 import 'package:food_app/provider/api_calls.dart';
@@ -46,6 +47,7 @@ class _details_screen_productsState extends State<details_screen_products> {
   @override
   @override
   Widget build(BuildContext context) {
+    final badge = Provider.of<cartprovider>(context);
     final provider = Provider.of<cartprovider>(context);
     final varient = Provider.of<api_calls>(context);
 
@@ -66,13 +68,75 @@ class _details_screen_productsState extends State<details_screen_products> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: 280,
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.network(
-                      widget.image,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                      height: 200,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        borderRadius: new BorderRadius.vertical(
+                            bottom: new Radius.elliptical(
+                                MediaQuery.of(context).size.width, 70.0)),
+                        image: DecorationImage(
+                          colorFilter: ColorFilter.mode(
+                              Colors.black.withOpacity(0.8), BlendMode.dstATop),
+                          fit: BoxFit.fill,
+                          image: NetworkImage(
+                            widget.image,
+                          ),
+                        ),
+                      ),
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(left: 8, right: 15, top: 30),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Container(
+                                  height: 40,
+                                  width: 40,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white,
+                                  ),
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.arrow_back_ios,
+                                      color: Color.fromRGBO(252, 186, 24, 1),
+                                    ),
+                                  )),
+                            ),
+                            Container(
+                              height: 40,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                              ),
+                              child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              checkout_order_screens()),
+                                    );
+                                  },
+                                  child: Badge(
+                                    badgeColor: Color.fromRGBO(252, 186, 24, 1),
+                                    animationType: BadgeAnimationType.slide,
+                                    badgeContent: Text('${badge.cartvalue}'),
+                                    child: Image.asset(
+                                      'images/carticon.png',
+                                      color: Color.fromRGBO(252, 186, 24, 1),
+                                    ),
+                                  )),
+                            ),
+                          ],
+                        ),
+                      )),
                   SizedBox(
                     height: 15,
                   ),

@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +24,7 @@ class _login_screenState extends State<login_screen> {
     Route _createRoute() {
       return PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
-             find_resturent(),
+            find_resturent(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = Offset(1.0, 1.0);
           const end = Offset.zero;
@@ -48,7 +47,10 @@ class _login_screenState extends State<login_screen> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('Sign In'),
+          title: Text(
+            'Sign In',
+            style: TextStyle(color: Colors.black),
+          ),
           // leading: IconButton(
           //   icon: Icon(Icons.arrow_back, color: Colors.black),
           //   onPressed: () => Navigator.of(context).pop(),
@@ -94,11 +96,11 @@ class _login_screenState extends State<login_screen> {
                       ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) => create_acount_screen()),
-                          // );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => create_acount_screen()),
+                          );
                         },
                     ),
                   ])),
@@ -115,9 +117,8 @@ class _login_screenState extends State<login_screen> {
                       ),
                       width: 334,
                       child: TextField(
-                         controller: email,
+                        controller: email,
                         decoration: InputDecoration(
-
                             suffixStyle: TextStyle(color: Colors.grey),
                             // suffixIcon: Icon(
                             //   Icons.check,
