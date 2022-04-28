@@ -2,8 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:food_app/Tabbar_screens/tabbar_screen.dart';
+import 'package:food_app/demo.dart';
 import 'package:food_app/provider/api_calls.dart';
 import 'package:food_app/provider/cartprovider.dart';
+import 'package:food_app/provider/signnapi.dart';
 import 'package:food_app/signin_register_screens/create_account_screen.dart';
 import 'package:food_app/signin_register_screens/find_resturent_near_you.dart';
 import 'package:food_app/signin_register_screens/forgot_password_screen.dart';
@@ -279,26 +282,31 @@ class _login_screenState extends State<login_screen> {
                   SizedBox(
                     height: 10,
                   ),
-                  Center(
-                    child: Container(
-                      height: 50,
-                      width: 300,
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(66, 133, 244, 1),
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
+                  InkWell(
+                    onTap: () {
+                      signIn(context);
+                    },
+                    child: Center(
                       child: Container(
-                        child: ListTile(
-                          title: Text(
-                            'Connects with Goggle',
-                            style: TextStyle(
-                              fontFamily: 'Roboto',
+                        height: 50,
+                        width: 300,
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(66, 133, 244, 1),
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        child: Container(
+                          child: ListTile(
+                            title: Text(
+                              'Connects with Goggle',
+                              style: TextStyle(
+                                fontFamily: 'Roboto',
+                                color: Colors.white,
+                              ),
+                            ),
+                            leading: Icon(
+                              FontAwesomeIcons.google,
                               color: Colors.white,
                             ),
-                          ),
-                          leading: Icon(
-                            FontAwesomeIcons.google,
-                            color: Colors.white,
                           ),
                         ),
                       ),
@@ -307,5 +315,19 @@ class _login_screenState extends State<login_screen> {
                 ]),
           ),
         ));
+  }
+}
+
+Future signIn(BuildContext context) async {
+  final user = await GoogleSignInApi.login();
+  if (user == null) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text("faild")));
+  } else {
+    print(user.displayName);
+    print(user.email);
+
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (context) => dem()));
   }
 }
