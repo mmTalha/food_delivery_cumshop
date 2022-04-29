@@ -1,10 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:food_app/Tabbar_screens/dashboard.dart';
 import 'package:food_app/Tabbar_screens/tabbar_screen.dart';
 import 'package:food_app/provider/api_calls.dart';
 import 'package:food_app/provider/cartprovider.dart';
 import 'package:food_app/provider/locations.dart';
+import 'package:food_app/widgets/inherited_widget.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
@@ -13,66 +13,14 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class find_resturent extends StatelessWidget {
-    find_resturent({Key? key}) : super(key: key);
+  find_resturent({Key? key}) : super(key: key);
 
+  final TextEditingController address = TextEditingController();
 
-
-
-
-
-
-  Future<Position> _getGeoLocationPosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-    // Test if location services are enabled.
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      // Location services are not enabled don't continue
-      // accessing the position and request users of the
-      // App to enable the location services.
-      await Geolocator.openLocationSettings();
-      return Future.error('Location services are disabled.');
-    }
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        // Permissions are denied, next time you could try
-        // requesting permissions again (this is also where
-        // Android's shouldShowRequestPermissionRationale
-        // returned true. According to Android guidelines
-        // your App should show an explanatory UI now.
-        return Future.error('Location permissions are denied');
-      }
-    }
-    if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-    // When we reach here, permissions are granted and we can
-    // continue accessing the position of the device.
-    return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-  }
-  Future<void> GetAddressFromLatLong(Position position)async {
-    List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
-    print(placemarks);
-    Placemark place = placemarks[0];
-    Address = '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
-     print(Address);
-    locate =  '${place.subLocality}';
-    print(locate);
-  }
-  String Address = 'search';
-  String locate = '';
-    final TextEditingController address = TextEditingController();
-
-
-    @override
+  @override
   Widget build(BuildContext context) {
+    final locationservices_provider = Provider.of<cartprovider>(context);
     final menu = Provider.of<api_calls>(context);
-    final locationservices_provider = Provider.of<location_provider>(context);
-
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -110,21 +58,8 @@ class find_resturent extends StatelessWidget {
           ),
           Center(
             child: GestureDetector(
-              onTap: () async{
-                Position position = await _getGeoLocationPosition();
-                final _prefs = SharedPreferences.getInstance();
-                final SharedPreferences prefs = await _prefs;
-                final latitude  = prefs.setDouble('latitude',position.latitude);
-                final longitude  = prefs.setDouble('longtitude',position.longitude);
-                final latlong  = prefs.getDouble('longtitude');
-                GetAddressFromLatLong(position);
-                print(latlong);
-                 menu.menuitems();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => tabbar(latitude: locate,longtitude: position.latitude,)),
-                );
+              onTap: () {
+                locationservices_provider.currentlocation(context);
               },
               child: Container(
                   height: 50,
@@ -156,30 +91,31 @@ class find_resturent extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          Container(
-            decoration: BoxDecoration(
-              color:  Color.fromRGBO(242, 242, 242, 1),
-              borderRadius: BorderRadius.all(
-                Radius.circular(10),
+          Consumer<api_calls>(builder: (context, provider, child) {
+            return Container(
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(242, 242, 242, 1),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
               ),
-            ),
-            width: 310,
-            child: GooglePlaceAutoCompleteTextField(
-                textEditingController: address,
-                googleAPIKey: "AIzaSyBhrmU2VaNQP3P27wetiynn6UR_qfN47Xg",
-                inputDecoration: InputDecoration(
+              width: 310,
+              child: GooglePlaceAutoCompleteTextField(
+                  textEditingController: address,
+                  googleAPIKey: "AIzaSyBhrmU2VaNQP3P27wetiynn6UR_qfN47Xg",
+                  inputDecoration: InputDecoration(
                     prefixIcon: Icon(Icons.add_location),
                     prefixStyle: TextStyle(color: Colors.grey),
                     hintText: 'Enter a New Address',
                     enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5),
                         borderSide: BorderSide(
-                          color:  Color.fromRGBO(242, 242, 242, 1),
+                          color: Color.fromRGBO(242, 242, 242, 1),
                         )),
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5),
                         borderSide: BorderSide(
-                          color:  Color.fromRGBO(242, 242, 242, 1),
+                          color: Color.fromRGBO(242, 242, 242, 1),
                         )),
                     errorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5),
@@ -187,52 +123,69 @@ class find_resturent extends StatelessWidget {
                     focusedErrorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5),
                         borderSide: BorderSide(color: Colors.red)),
-                ),
-                debounceTime: 800 ,// default 600 ms,
-                 isLatLngRequired:true,// if you required coordinates from place detail
-                getPlaceDetailWithLatLng: (Prediction prediction) {
-                  // this method will return latlng with place detail
-                  print("placeDetails" + prediction.lat.toString()+ prediction.lng.toString());
-                }, // this callback is called when isLatLngRequired is true
-                itmClick: (Prediction prediction) {
-                  address.text=prediction.description!;
-                  address.selection = TextSelection.fromPosition(TextPosition(offset: prediction.description!.length));
-                }
-            ),
-          ),
+                  ),
+                  debounceTime: 800,
+                  // default 600 ms,
+                  isLatLngRequired: true,
+                  // if you required coordinates from place detail
+                  getPlaceDetailWithLatLng: (Prediction prediction) {
+                    // this method will return latlng with place detail
+                    print("placeDetails" +
+                        prediction.lat.toString() +
+                        prediction.lng.toString());
+                    provider.lat = prediction.lat;
+                    provider.long = prediction.lng;
+                    print(provider.lat);
+                    print(provider.long);
+                    print(address.text);
+                  },
+                  itmClick: (Prediction prediction) async {
+                    final _prefs = SharedPreferences.getInstance();
+                    final SharedPreferences prefs = await _prefs;
+                    final latitude = prefs.setDouble(
+                        'latitude', double.parse('${provider.lat}'));
+                    final longitude = prefs.setDouble(
+                        'longtitude', double.parse('${provider.long}'));
+                    // final longtitude1 = prefs.getString('longtitude');
+                    // print(longtitude1);
 
-          // Container(
-          //   decoration: BoxDecoration(
-          //     color:  Color.fromRGBO(242, 242, 242, 1),
-          //     borderRadius: BorderRadius.all(
-          //       Radius.circular(10),
-          //     ),
-          //   ),
-          //   width: 310,
-          //   child: TextField(
-          //     keyboardType: TextInputType.phone,
-          //     decoration: InputDecoration(
-          //         prefixIcon: Icon(Icons.add_location),
-          //         prefixStyle: TextStyle(color: Colors.grey),
-          //         hintText: 'Enter a New Address',
-          //         enabledBorder: OutlineInputBorder(
-          //             borderRadius: BorderRadius.circular(5),
-          //             borderSide: BorderSide(
-          //               color:  Color.fromRGBO(242, 242, 242, 1),
-          //             )),
-          //         focusedBorder: OutlineInputBorder(
-          //             borderRadius: BorderRadius.circular(5),
-          //             borderSide: BorderSide(
-          //               color:  Color.fromRGBO(242, 242, 242, 1),
-          //             )),
-          //         errorBorder: OutlineInputBorder(
-          //             borderRadius: BorderRadius.circular(5),
-          //             borderSide: BorderSide(color: Colors.red)),
-          //         focusedErrorBorder: OutlineInputBorder(
-          //             borderRadius: BorderRadius.circular(5),
-          //             borderSide: BorderSide(color: Colors.red))),
-          //   ),
-          // ),
+                    address.text = prediction.description!;
+                    address.selection = TextSelection.fromPosition(
+                        TextPosition(offset: prediction.description!.length));
+                  }),
+            );
+          }),
+          SizedBox(
+            height: 25,
+          ),
+          Center(
+            child: AnimatedContainer(
+                duration: Duration(seconds: 2),
+                curve: Curves.fastOutSlowIn,
+                height: 45,
+                width: 160,
+                child: MaterialButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    color: Color.fromRGBO(252, 186, 24, 1),
+                    child: Text(
+                      'Confirm',
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => InheritedDataProvider(
+                                  child: tabbar(),
+                                  data: address.text,
+                                )),
+                      );
+                    })),
+          ),
         ],
       ),
     );
