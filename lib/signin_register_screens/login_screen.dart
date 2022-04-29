@@ -12,6 +12,8 @@ import 'package:food_app/signin_register_screens/find_resturent_near_you.dart';
 import 'package:food_app/signin_register_screens/forgot_password_screen.dart';
 import 'package:provider/provider.dart';
 
+import 'package:http/http.dart' as http;
+
 class login_screen extends StatefulWidget {
   const login_screen({Key? key}) : super(key: key);
 
@@ -20,6 +22,7 @@ class login_screen extends StatefulWidget {
 }
 
 class _login_screenState extends State<login_screen> {
+  bool visible = false;
   @override
   Widget build(BuildContext context) {
     bool _isObscure = true;
@@ -316,18 +319,126 @@ class _login_screenState extends State<login_screen> {
           ),
         ));
   }
-}
 
-Future signIn(BuildContext context) async {
-  final user = await GoogleSignInApi.login();
-  if (user == null) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text("faild")));
-  } else {
-    print(user.displayName);
-    print(user.email);
+  Future signIn(BuildContext context) async {
+    final user = await GoogleSignInApi.login();
+    if (user == null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Failed to Login")));
+    } else {
+      var a = user.displayName;
+      var b = user.email;
+      print(a);
+      print(b);
+      signs();
+    }
+  }
 
-    Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (context) => dem()));
+  Future signs() async {
+    final multipartRequest = new http.MultipartRequest("POST",
+        Uri.parse("https://dnpprojects.com/demo/comshop/api/googleLogin"));
+
+    multipartRequest.fields.addAll({
+      "name": user.displayName.text,
+      "email": _email.text,
+    });
+    http.StreamedResponse response = await multipartRequest.send();
+
+    var responseString = await response.stream.bytesToString();
+
+    if (response.statusCode == 200) {
+      setState(() {
+        visible = false;
+      });
+    }
+    if (responseString ==
+        '{"success":false,"message":"Validation Error.","data":{"email":["The email has already been taken."]}}') {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 80,
+                  width: 80,
+                  child: Image.asset(
+                    'images/crs.png',
+                    height: 80,
+                    width: 80,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Email Address has Already Registered",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: new Text("OK"),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => login_screen()),
+                  );
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Column(
+              children: [
+                Container(
+                  height: 80,
+                  width: 80,
+                  child: Image.asset(
+                    'images/chk.png',
+                    height: 80,
+                    width: 80,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                new Text(
+                  "User Register Sucessfully",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: new Text("OK"),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            phone_number_screen()),
+                  );
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    print("response: " + responseString);
+    print("response Status: ${response.statusCode}");
   }
 }
