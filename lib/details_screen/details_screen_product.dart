@@ -1,14 +1,15 @@
-import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:food_app/checkout_screens/checkout_order_screen.dart';
 import 'package:food_app/provider/api_calls.dart';
 import 'package:food_app/provider/cartprovider.dart';
+import 'package:food_app/signin_register_screens/find_resturent_near_you.dart';
 import 'package:provider/provider.dart';
 
 class details_screen_products extends StatefulWidget {
   final id;
   final image;
-  const details_screen_products({Key? key, this.id, this.image})
+  final resturentid;
+    details_screen_products({Key? key, this.id, this.image, this.resturentid})
       : super(key: key);
 
   @override
@@ -17,10 +18,13 @@ class details_screen_products extends StatefulWidget {
 }
 
 class _details_screen_productsState extends State<details_screen_products> {
-  List variant = [];
-
-  int _n = 0;
-
+  var productid;
+  var resturentid;
+  var variantid;
+  var price;
+  var quantity;
+   int _n = 1;
+  int selectedIndex = -1;
   void add() {
     setState(() {
       _n++;
@@ -32,26 +36,17 @@ class _details_screen_productsState extends State<details_screen_products> {
       if (_n != 0) _n--;
     });
   }
-
+  @override
+  void initState() {
+     print(resturentid);
+    super.initState();
+  }
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  var iid;
-  int _value = 0;
-  var _griup = [-1];
-  String _currText = '';
-  bool _isChecked = true;
-  var isSelected;
-  var _selectedBox;
-  final Set _saved = Set();
-  List _selectedIndexs = [0];
-  // var a = 0;
   @override
-  @override
+
   Widget build(BuildContext context) {
-    final badge = Provider.of<cartprovider>(context);
     final provider = Provider.of<cartprovider>(context);
     final varient = Provider.of<api_calls>(context);
-
-    //var id;
     return Scaffold(
       key: _scaffoldKey,
       body: SingleChildScrollView(
@@ -62,81 +57,19 @@ class _details_screen_productsState extends State<details_screen_products> {
           if (snap.hasData) {
             int _value = 1;
             var data = snap.data['productDetail'][0]['variant'];
-            //   print(data);
+
             return Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                      height: 200,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        borderRadius: new BorderRadius.vertical(
-                            bottom: new Radius.elliptical(
-                                MediaQuery.of(context).size.width, 70.0)),
-                        image: DecorationImage(
-                          colorFilter: ColorFilter.mode(
-                              Colors.black.withOpacity(0.8), BlendMode.dstATop),
-                          fit: BoxFit.fill,
-                          image: NetworkImage(
-                            widget.image,
-                          ),
-                        ),
-                      ),
-                      child: Padding(
-                        padding:
-                            const EdgeInsets.only(left: 8, right: 15, top: 30),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Container(
-                                  height: 40,
-                                  width: 40,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white,
-                                  ),
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.arrow_back_ios,
-                                      color: Color.fromRGBO(252, 186, 24, 1),
-                                    ),
-                                  )),
-                            ),
-                            Container(
-                              height: 40,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white,
-                              ),
-                              child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              checkout_order_screens()),
-                                    );
-                                  },
-                                  child: Badge(
-                                    badgeColor: Color.fromRGBO(252, 186, 24, 1),
-                                    animationType: BadgeAnimationType.slide,
-                                    badgeContent: Text('${badge.cartvalue}'),
-                                    child: Image.asset(
-                                      'images/carticon.png',
-                                      color: Color.fromRGBO(252, 186, 24, 1),
-                                    ),
-                                  )),
-                            ),
-                          ],
-                        ),
-                      )),
+                    height: 280,
+                    width: MediaQuery.of(context).size.width,
+                    child: Image.network(
+                      widget.image,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                   SizedBox(
                     height: 15,
                   ),
@@ -209,66 +142,79 @@ class _details_screen_productsState extends State<details_screen_products> {
                             physics: NeverScrollableScrollPhysics(),
                             itemCount:
                                 snap.data['productDetail'][0]['variant'].length,
-                            itemBuilder: (ctx, index) {
-                              //   a++;
-                              //   iid = [index];
-                              var ab = snap.data['productDetail'][0]['variant']
-                                  [index]['name'];
-                              // final _isSelected =
-                              //     _selectedIndexs.contains(index);
-                              return
-                                  //  GestureDetector(
-                                  //     onTap: () {
-                                  //       setState(() {
-                                  //         print(index);
-                                  //         var d = index == a++;
-                                  //         print(d);
+                            itemBuilder: (ctx, i) {
+                              var variantname = snap.data['productDetail'][0]
+                                  ['variant'][i]['name'];
 
-                                  //           // if (index == a++) {
-                                  //           //   _selectedIndexs.remove(index);
-                                  //           // }
-                                  //           // if (_isSelected) {
-                                  //           //   _selectedIndexs.remove(index);
-                                  //           // } else {
-                                  //           //   _selectedIndexs.add(index);
-                                  //           // }
-                                  //           print(_selectedIndexs);
-                                  //         }
-                                  //       );
-                                  //     },
-                                  //     child: Padding(
-                                  //       padding: const EdgeInsets.all(1.0),
-                                  //       child: Container(
-                                  //         color: _isSelected ? Colors.red : null,
-                                  //         child: ListTile(title: Text(ab)),
-                                  //       ),
-                                  //     ));
-
-                                  ListView(
-                                shrinkWrap: true,
+                              return Column(
                                 children: [
-                                  Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: ListTile(
-                                          //   isThreeLine: true,
-                                          leading: Checkbox(
-                                            value: _saved.contains(index),
-                                            onChanged: (val) {
-                                              setState(() {
-                                                print([index]);
-                                                print(snap.data['productDetail']
-                                                        [0]['variant'][index]
-                                                    ['name']);
-                                                if (val == true) {
-                                                  _saved.add(index);
-                                                } else {
-                                                  _saved.remove(index);
-                                                }
-                                                //   print(a);
-                                              });
-                                            },
+
+                                  ListTile(
+                                      selected:
+                                          selectedIndex == i ? true : false,
+                                      title: Row(
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    width: 2,
+                                                    color: selectedIndex == i
+                                                        ? Color.fromRGBO(
+                                                            252, 186, 24, 1)
+                                                        : Colors.white),
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(25)),
+                                            height: 30,
+                                            width: 30,
+                                            child: Center(
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        width: 2,
+                                                        color: selectedIndex ==
+                                                                i
+                                                            ? Color.fromRGBO(
+                                                                252, 186, 24, 1)
+                                                            : Colors.white),
+                                                    color: selectedIndex == i
+                                                        ? Color.fromRGBO(
+                                                            252, 186, 24, 1)
+                                                        : Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            25)),
+                                                height: 15,
+                                                width: 15,
+                                              ),
+                                            ),
                                           ),
-                                          title: Text(ab.toString()))),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                            '$variantname',
+                                            style: TextStyle(
+                                                color: selectedIndex == i
+                                                    ? Color.fromRGBO(
+                                                        252, 186, 24, 1)
+                                                    : Colors.black),
+                                          )
+                                        ],
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          selectedIndex = i;
+                                          productid = snap.data['productDetail'][0]['variant'][i]['product_id'];
+                                          variantid = snap.data['productDetail'][0]['variant'][i]['id'];
+                                          price = snap.data['productDetail'][0]['price'];
+                                          quantity = _n;
+
+                                        });
+                                        print(
+                                            '${snap.data['productDetail'][0]['variant'][i]['id']}');
+                                      }),
+                                  Divider()
                                 ],
                               );
                             }),
@@ -292,8 +238,8 @@ class _details_screen_productsState extends State<details_screen_products> {
                                     elevation: 0.5,
                                     shape: CircleBorder(),
                                     padding: EdgeInsets.all(10),
-                                    primary: Color.fromRGBO(
-                                        248, 248, 248, 1), // <-- Button color
+                                    primary: Color.fromRGBO(248, 248, 248, 1),
+                                    // <-- Button color
                                     onPrimary: Color.fromRGBO(
                                         151, 151, 151, 1), // <-- Splash color
                                   ),
@@ -305,13 +251,13 @@ class _details_screen_productsState extends State<details_screen_products> {
                                     minus();
                                   },
                                   child:
-                                      Icon(Icons.remove, color: Colors.black),
+                                      Icon(_n==1?null:Icons.remove, color: Colors.black),
                                   style: ElevatedButton.styleFrom(
                                     elevation: 0.5,
                                     shape: CircleBorder(),
                                     padding: EdgeInsets.all(10),
-                                    primary: Color.fromRGBO(
-                                        248, 248, 248, 1), // <-- Button color
+                                    primary: Color.fromRGBO(248, 248, 248, 1),
+                                    // <-- Button color
                                     onPrimary: Color.fromRGBO(
                                         151, 151, 151, 1), // <-- Splash color
                                   ),
@@ -344,8 +290,10 @@ class _details_screen_productsState extends State<details_screen_products> {
                             ),
                             animationDuration: Duration(seconds: 1),
                             onPressed: () {
-                              provider.cartbadge();
-                              varient.add_to_cart(23, 1, 5, 1023, 3);
+                             print(_n);
+                              // provider.cartbadge();
+                              // varient.add_to_cart(23, 1, 5, 1023, 3);
+                              varient.add_to_cart(productid,resturentid,variantid,price,_n);
                               final snackBar = SnackBar(
                                   elevation: 6.0,
                                   backgroundColor:
@@ -388,6 +336,9 @@ class _details_screen_productsState extends State<details_screen_products> {
                 ],
               ),
             );
+          }
+          else if(!snap.hasData){
+            return Center(child: Text('No data Found'));
           }
           if (snap.hasError) print(snap.error.toString());
           return Align(
