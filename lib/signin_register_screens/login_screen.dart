@@ -1,3 +1,4 @@
+import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -19,31 +20,13 @@ class login_screen extends StatefulWidget {
 
 class _login_screenState extends State<login_screen> {
   @override
+  @override
   Widget build(BuildContext context) {
     bool _isObscure = true;
-    final provider = Provider.of<api_calls>(context);
-    Route _createRoute() {
-      return PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-             find_resturent(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(1.0, 1.0);
-          const end = Offset.zero;
-          const curve = Curves.bounceIn;
-
-          var tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-          return SlideTransition(
-            position: animation.drive(tween),
-            child: child,
-          );
-        },
-      );
-    }
 
     final TextEditingController email = TextEditingController();
     final TextEditingController password = TextEditingController();
+    final provider = Provider.of<api_calls>(context, listen: true);
 
     return Scaffold(
         appBar: AppBar(
@@ -115,9 +98,8 @@ class _login_screenState extends State<login_screen> {
                       ),
                       width: 334,
                       child: TextField(
-                         controller: email,
+                        controller: email,
                         decoration: InputDecoration(
-
                             suffixStyle: TextStyle(color: Colors.grey),
                             // suffixIcon: Icon(
                             //   Icons.check,
@@ -157,17 +139,9 @@ class _login_screenState extends State<login_screen> {
                       ),
                       width: 334,
                       child: TextField(
+                        obscureText: true,
                         controller: password,
                         decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                                icon: Icon(_isObscure
-                                    ? Icons.visibility
-                                    : Icons.visibility_off),
-                                onPressed: () {
-                                  setState(() {
-                                    _isObscure = !_isObscure;
-                                  });
-                                }),
                             prefixStyle: TextStyle(color: Colors.grey),
                             hintText: 'Password',
                             enabledBorder: OutlineInputBorder(
@@ -211,33 +185,39 @@ class _login_screenState extends State<login_screen> {
                   SizedBox(
                     height: 5,
                   ),
-                  Center(
-                    child: AnimatedContainer(
-                        duration: Duration(seconds: 1),
-                        curve: Curves.fastOutSlowIn,
-                        height: 40,
-                        width: 160,
-                        child: MaterialButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            color: Color.fromRGBO(252, 186, 24, 1),
-                            child: Text(
-                              'Signin',
-                              style: TextStyle(
-                                fontFamily: 'Roboto',
-                                color: Colors.white,
-                              ),
-                            ),
-                            onPressed: () {
-                              provider.login(email.text, password.text);
-                              print(email.value);
-                              print(password.text);
-                              Navigator.push(
-                                context,
-                                _createRoute(),
-                              );
-                            })),
-                  ),
+                  Consumer<api_calls>(builder: (context, provider, child) {
+                    return Center(
+                      child: AnimatedContainer(
+                          duration: Duration(seconds: 2),
+                          curve: Curves.fastOutSlowIn,
+                          height: provider.isvalue ? 40 : 45,
+                          width: provider.isvalue ? 80 : 160,
+                          child: MaterialButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              color: Color.fromRGBO(252, 186, 24, 1),
+                              child: provider.isvalue
+                                  ? CircularProgressIndicator(
+                                      color: Colors.white,
+                                    )
+                                  : Text(
+                                      'Signin',
+                                      style: TextStyle(
+                                        fontFamily: 'Roboto',
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                              onPressed: () {
+                                setState(() {
+                                  provider.isvalue = true;
+                                });
+                                provider.login(
+                                    email.text, password.text, context);
+
+
+                              })),
+                    );
+                  }),
                   SizedBox(
                     height: 5,
                   ),

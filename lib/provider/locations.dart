@@ -1,10 +1,9 @@
-import 'dart:convert';
 
 
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 
-class location_provider extends ChangeNotifier{
+class location_provider with ChangeNotifier{
 
 
 

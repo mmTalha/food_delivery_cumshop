@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:food_app/models/categories_model.dart';
+import 'package:food_app/services/getcategories_api.dart';
 
 class search_screen extends StatelessWidget {
   const search_screen({Key? key}) : super(key: key);
@@ -62,7 +64,7 @@ class search_screen extends StatelessWidget {
                   ),
                   Container(
                     child: Text(
-                      'Top Restaurants',
+                      'Top Categories',
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -72,67 +74,145 @@ class search_screen extends StatelessWidget {
                   SizedBox(
                     height: 25,
                   ),
-                  GridView.builder(
-                    scrollDirection: Axis.vertical,
-                      physics: NeverScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 180,
-                          childAspectRatio:3/4,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 0),
-                      itemCount:8,
-                      shrinkWrap: true,
-                      itemBuilder: (BuildContext ctx, index) {
-                        return Container(
-                          height: 200,
-                          width: 150,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Image.asset('images/halal.png'),
-                              Text(
-                                'The Halal Guys',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Row(
+                  FutureBuilder<Categories>(
+                    future:get_categories().getcategories() ,
+                    builder: (c,   snap){
+                      if (!snap.hasData)
+                        return Align(
+                            alignment: Alignment.center,
+                            child: Image.asset('images/loader.gif'));
+                      if (snap.hasData)
+                        return
+                      GridView.builder(
+                        scrollDirection: Axis.vertical,
+                          physics: NeverScrollableScrollPhysics(),
+                          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 180,
+                              childAspectRatio:3/4,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 0),
+                          itemCount:snap.data!.categories!.length,
+                          shrinkWrap: true,
+                          itemBuilder: (BuildContext ctx, index) {
+                            return Container(
+                              height: 200,
+                              width: 150,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
+                                  Image.asset('images/halal.png'),
                                   Text(
-                                    '\$\$',
+                                    '${snap.data!.categories![index].name}',
                                     style: TextStyle(
-                                        color: Color.fromRGBO(134, 134, 134, 1),
+                                        color: Colors.black,
                                         fontSize: 14,
-                                        fontWeight: FontWeight.w400),
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text(
-                                    '.',
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(134, 134, 134, 1),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text(
-                                    'Chinese',
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(134, 134, 134, 1),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400),
-                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '\$\$',
+                                        style: TextStyle(
+                                            color: Color.fromRGBO(134, 134, 134, 1),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        '.',
+                                        style: TextStyle(
+                                            color: Color.fromRGBO(134, 134, 134, 1),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        'Chinese',
+                                        style: TextStyle(
+                                            color: Color.fromRGBO(134, 134, 134, 1),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    ],
+                                  )
                                 ],
-                              )
-                            ],
-                          ),
-                        );
-                      })
+                              ),
+                          );});
+
+                      if (snap.hasError) print(snap.error.toString());
+                      return Align(
+                          alignment: Alignment.center,
+                          child: Image.asset('images/loader.gif'));
+                    },
+
+
+                  )
+                  // GridView.builder(
+                  //   scrollDirection: Axis.vertical,
+                  //     physics: NeverScrollableScrollPhysics(),
+                  //     gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  //         maxCrossAxisExtent: 180,
+                  //         childAspectRatio:3/4,
+                  //         crossAxisSpacing: 10,
+                  //         mainAxisSpacing: 0),
+                  //     itemCount:8,
+                  //     shrinkWrap: true,
+                  //     itemBuilder: (BuildContext ctx, index) {
+                  //       return Container(
+                  //         height: 200,
+                  //         width: 150,
+                  //         child: Column(
+                  //           crossAxisAlignment: CrossAxisAlignment.start,
+                  //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //           children: [
+                  //             Image.asset('images/halal.png'),
+                  //             Text(
+                  //               'The Halal Guys',
+                  //               style: TextStyle(
+                  //                   color: Colors.black,
+                  //                   fontSize: 14,
+                  //                   fontWeight: FontWeight.bold),
+                  //             ),
+                  //             Row(
+                  //               children: [
+                  //                 Text(
+                  //                   '\$\$',
+                  //                   style: TextStyle(
+                  //                       color: Color.fromRGBO(134, 134, 134, 1),
+                  //                       fontSize: 14,
+                  //                       fontWeight: FontWeight.w400),
+                  //                 ),
+                  //                 SizedBox(
+                  //                   width: 5,
+                  //                 ),
+                  //                 Text(
+                  //                   '.',
+                  //                   style: TextStyle(
+                  //                       color: Color.fromRGBO(134, 134, 134, 1),
+                  //                       fontSize: 14,
+                  //                       fontWeight: FontWeight.w400),
+                  //                 ),
+                  //                 SizedBox(
+                  //                   width: 5,
+                  //                 ),
+                  //                 Text(
+                  //                   'Chinese',
+                  //                   style: TextStyle(
+                  //                       color: Color.fromRGBO(134, 134, 134, 1),
+                  //                       fontSize: 14,
+                  //                       fontWeight: FontWeight.w400),
+                  //                 ),
+                  //               ],
+                  //             )
+                  //           ],
+                  //         ),
+                  //       );
+                  //     })
                 ],
               ),
             ),

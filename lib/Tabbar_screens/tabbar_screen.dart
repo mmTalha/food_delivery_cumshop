@@ -4,17 +4,25 @@ import 'package:food_app/Tabbar_screens/orders.dart';
 import 'package:food_app/Tabbar_screens/profile.dart';
 import 'package:food_app/Tabbar_screens/search_screen.dart';
 import 'package:food_app/categories/categories.dart';
+import 'package:food_app/provider/cartprovider.dart';
+import 'package:provider/provider.dart';
 
 class tabbar extends StatefulWidget {
   final latitude;
   final longtitude;
-  const tabbar({Key? key, this.latitude, this.longtitude}) : super(key: key);
+   final address;
+
+   tabbar({Key? key, this.latitude, this.longtitude, this.address})
+      : super(key: key);
 
   @override
   _tabbarState createState() => _tabbarState();
 }
 
+
 class _tabbarState extends State<tabbar> {
+
+  late String address = widget.address;
   int _currentIndex = 0;
   final List<Widget> _children = [
     dashboard_screen(),
@@ -22,6 +30,7 @@ class _tabbarState extends State<tabbar> {
     orders(),
     Profile(),
   ];
+
   void onTappedBar(int index) {
     setState(() {
       _currentIndex = index;

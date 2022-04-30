@@ -37,6 +37,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor:  Color.fromRGBO(250,249,249, 1),
         fontFamily:  'SF-pro',
+        focusColor:  Color.fromRGBO(252, 186, 24, 1),
         // primaryColor:  Color.fromRGBO(245, 245, 245, 1),
         //
         backgroundColor: Color.fromRGBO(250,249,249, 1),

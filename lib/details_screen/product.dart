@@ -97,6 +97,7 @@ class _productState extends State<product> with TickerProviderStateMixin {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>details_screen_products(
+                                          resturentid: menus_id == null? menus_ini[i]['restaurant_id'] : menus_id[i]['restaurant_id'] ,
                                          id:  menus_id == null? menus_ini[i]['id'] : menus_id[i]['id'],
                                         image:imgurl + (menus_id == null ? menus_ini[i]['image'] : menus_id[i]['image']),
                                         ) ),
