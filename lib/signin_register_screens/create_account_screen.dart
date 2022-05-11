@@ -183,7 +183,6 @@ class _create_acount_screenState extends State<create_acount_screen> {
                       width: 334,
                       child: TextFormField(
                         controller: _password,
-                        keyboardType: TextInputType.phone,
                         validator: (var value) {
                           if (value!.isEmpty) {
                             return "please enter pasword";
@@ -246,7 +245,7 @@ class _create_acount_screenState extends State<create_acount_screen> {
 
                                 if (_formkey.currentState!.validate()) {
                                   print("Sucessful");
-                                  uploadImage();
+                                  createaccount();
                                 } else {
                                   print("Unsucessful");
                                 }
@@ -352,7 +351,7 @@ class _create_acount_screenState extends State<create_acount_screen> {
         ));
   }
 
-  Future uploadImage() async {
+  Future createaccount() async {
     final multipartRequest = new http.MultipartRequest("POST",
         Uri.parse("https://dnpprojects.com/demo/comshop/api/UserRegister"));
 
@@ -407,7 +406,8 @@ class _create_acount_screenState extends State<create_acount_screen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) => login_screen()),
+                        builder: (BuildContext context) =>
+                            create_acount_screen()),
                   );
                 },
               ),
@@ -448,8 +448,7 @@ class _create_acount_screenState extends State<create_acount_screen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            phone_number_screen()),
+                        builder: (BuildContext context) => login_screen()),
                   );
                 },
               ),

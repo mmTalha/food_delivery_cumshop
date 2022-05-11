@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:food_app/checkout_screens/checkout_order_screen.dart';
 import 'package:food_app/provider/api_calls.dart';
@@ -9,7 +10,7 @@ class details_screen_products extends StatefulWidget {
   final id;
   final image;
   final resturentid;
-    details_screen_products({Key? key, this.id, this.image, this.resturentid})
+  details_screen_products({Key? key, this.id, this.image, this.resturentid})
       : super(key: key);
 
   @override
@@ -23,7 +24,7 @@ class _details_screen_productsState extends State<details_screen_products> {
   var variantid;
   var price;
   var quantity;
-   int _n = 1;
+  int _n = 1;
   int selectedIndex = -1;
   void add() {
     setState(() {
@@ -36,15 +37,17 @@ class _details_screen_productsState extends State<details_screen_products> {
       if (_n != 0) _n--;
     });
   }
+
   @override
   void initState() {
-     print(resturentid);
+    print(resturentid);
     super.initState();
   }
+
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
-
   Widget build(BuildContext context) {
+    final badge = Provider.of<cartprovider>(context);
     final provider = Provider.of<cartprovider>(context);
     final varient = Provider.of<api_calls>(context);
     return Scaffold(
@@ -63,11 +66,65 @@ class _details_screen_productsState extends State<details_screen_products> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: 280,
+                    height: 150,
                     width: MediaQuery.of(context).size.width,
-                    child: Image.network(
-                      widget.image,
-                      fit: BoxFit.cover,
+                    decoration: new BoxDecoration(
+                      image: DecorationImage(
+                          image: NetworkImage(
+                            widget.image,
+                          ),
+                          fit: BoxFit.cover),
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(80),
+                          bottomRight: Radius.circular(80)),
+                      color: Colors.black,
+                      shape: BoxShape.rectangle,
+                    ),
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(left: 10, right: 20, top: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white),
+                                child: Icon(Icons.arrow_back_ios)),
+                          ),
+                          GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          checkout_order_screens()),
+                                );
+                              },
+                              child: Container(
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white),
+                                child: Badge(
+                                    badgeColor: Color.fromRGBO(252, 186, 24, 1),
+                                    animationType: BadgeAnimationType.slide,
+                                    badgeContent: Text('${badge.cartvalue}'),
+                                    child: Image.asset(
+                                      'images/carticon.png',
+                                      color: Color.fromRGBO(252, 186, 24, 1),
+                                    )),
+                              )),
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -148,7 +205,6 @@ class _details_screen_productsState extends State<details_screen_products> {
 
                               return Column(
                                 children: [
-
                                   ListTile(
                                       selected:
                                           selectedIndex == i ? true : false,
@@ -205,11 +261,13 @@ class _details_screen_productsState extends State<details_screen_products> {
                                       onTap: () {
                                         setState(() {
                                           selectedIndex = i;
-                                          productid = snap.data['productDetail'][0]['variant'][i]['product_id'];
-                                          variantid = snap.data['productDetail'][0]['variant'][i]['id'];
-                                          price = snap.data['productDetail'][0]['price'];
+                                          productid = snap.data['productDetail']
+                                              [0]['variant'][i]['product_id'];
+                                          variantid = snap.data['productDetail']
+                                              [0]['variant'][i]['id'];
+                                          price = snap.data['productDetail'][0]
+                                              ['price'];
                                           quantity = _n;
-
                                         });
                                         print(
                                             '${snap.data['productDetail'][0]['variant'][i]['id']}');
@@ -250,8 +308,8 @@ class _details_screen_productsState extends State<details_screen_products> {
                                   onPressed: () {
                                     minus();
                                   },
-                                  child:
-                                      Icon(_n==1?null:Icons.remove, color: Colors.black),
+                                  child: Icon(_n == 1 ? null : Icons.remove,
+                                      color: Colors.black),
                                   style: ElevatedButton.styleFrom(
                                     elevation: 0.5,
                                     shape: CircleBorder(),
@@ -290,10 +348,11 @@ class _details_screen_productsState extends State<details_screen_products> {
                             ),
                             animationDuration: Duration(seconds: 1),
                             onPressed: () {
-                             print(_n);
+                              print(_n);
                               // provider.cartbadge();
                               // varient.add_to_cart(23, 1, 5, 1023, 3);
-                              varient.add_to_cart(productid,resturentid,variantid,price,_n);
+                              varient.add_to_cart(
+                                  productid, resturentid, variantid, price, _n);
                               final snackBar = SnackBar(
                                   elevation: 6.0,
                                   backgroundColor:
@@ -336,8 +395,7 @@ class _details_screen_productsState extends State<details_screen_products> {
                 ],
               ),
             );
-          }
-          else if(!snap.hasData){
+          } else if (!snap.hasData) {
             return Center(child: Text('No data Found'));
           }
           if (snap.hasError) print(snap.error.toString());

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:food_app/onboarding_screens/onborading_screen.dart';
@@ -14,7 +13,7 @@ import 'onboarding_screens/onboarding.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor:Colors.transparent,
+    statusBarColor: Colors.transparent,
   ));
   runApp(
     MultiProvider(
@@ -23,7 +22,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => api_calls()),
         ChangeNotifierProvider(create: (_) => location_provider()),
       ],
-      child:   MyApp(),
+      child: MyApp(),
     ),
   );
 }
@@ -35,12 +34,12 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor:  Color.fromRGBO(250,249,249, 1),
-        fontFamily:  'SF-pro',
-        focusColor:  Color.fromRGBO(252, 186, 24, 1),
-        // primaryColor:  Color.fromRGBO(245, 245, 245, 1),
-        //
-        backgroundColor: Color.fromRGBO(250,249,249, 1),
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          primary: Colors.white,
+          secondary: Colors.black,
+        ),
+        fontFamily: 'SF-pro',
+        focusColor: Color.fromRGBO(252, 186, 24, 1),
       ),
       home: IntroPage(),
     );

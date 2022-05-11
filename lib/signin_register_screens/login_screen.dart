@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +10,7 @@ import 'package:food_app/provider/signnapi.dart';
 import 'package:food_app/signin_register_screens/create_account_screen.dart';
 import 'package:food_app/signin_register_screens/find_resturent_near_you.dart';
 import 'package:food_app/signin_register_screens/forgot_password_screen.dart';
+import 'package:food_app/signin_register_screens/phone_number_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'package:http/http.dart' as http;
@@ -24,20 +23,44 @@ class login_screen extends StatefulWidget {
 }
 
 class _login_screenState extends State<login_screen> {
+  var nam;
+  var ema;
+  var siin;
   bool visible = false;
-  @override
   @override
   Widget build(BuildContext context) {
     bool _isObscure = true;
+    final provider = Provider.of<api_calls>(context);
+    Route _createRoute() {
+      return PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            find_resturent(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1.0, 1.0);
+          const end = Offset.zero;
+          const curve = Curves.bounceIn;
+
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+      );
+    }
 
     final TextEditingController email = TextEditingController();
     final TextEditingController password = TextEditingController();
-    final provider = Provider.of<api_calls>(context, listen: true);
 
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('Sign In'),
+          title: Text(
+            'Sign In',
+            style: TextStyle(color: Colors.black),
+          ),
           // leading: IconButton(
           //   icon: Icon(Icons.arrow_back, color: Colors.black),
           //   onPressed: () => Navigator.of(context).pop(),
@@ -83,11 +106,11 @@ class _login_screenState extends State<login_screen> {
                       ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) => create_acount_screen()),
-                          // );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => create_acount_screen()),
+                          );
                         },
                     ),
                   ])),
@@ -145,9 +168,17 @@ class _login_screenState extends State<login_screen> {
                       ),
                       width: 334,
                       child: TextField(
-                        obscureText: true,
                         controller: password,
                         decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                                icon: Icon(_isObscure
+                                    ? Icons.visibility
+                                    : Icons.visibility_off),
+                                onPressed: () {
+                                  setState(() {
+                                    _isObscure = !_isObscure;
+                                  });
+                                }),
                             prefixStyle: TextStyle(color: Colors.grey),
                             hintText: 'Password',
                             enabledBorder: OutlineInputBorder(
@@ -191,39 +222,34 @@ class _login_screenState extends State<login_screen> {
                   SizedBox(
                     height: 5,
                   ),
-                  Consumer<api_calls>(builder: (context, provider, child) {
-                    return Center(
-                      child: AnimatedContainer(
-                          duration: Duration(seconds: 2),
-                          curve: Curves.fastOutSlowIn,
-                          height: provider.isvalue ? 40 : 45,
-                          width: provider.isvalue ? 80 : 160,
-                          child: MaterialButton(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              color: Color.fromRGBO(252, 186, 24, 1),
-                              child: provider.isvalue
-                                  ? CircularProgressIndicator(
-                                      color: Colors.white,
-                                    )
-                                  : Text(
-                                      'Signin',
-                                      style: TextStyle(
-                                        fontFamily: 'Roboto',
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                              onPressed: () {
-                                setState(() {
-                                  provider.isvalue = true;
-                                });
-                                provider.login(
-                                    email.text, password.text, context);
-
-
-                              })),
-                    );
-                  }),
+                  Center(
+                    child: AnimatedContainer(
+                        duration: Duration(seconds: 1),
+                        curve: Curves.fastOutSlowIn,
+                        height: 40,
+                        width: 160,
+                        child: MaterialButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            color: Color.fromRGBO(252, 186, 24, 1),
+                            child: Text(
+                              'Signin',
+                              style: TextStyle(
+                                fontFamily: 'Roboto',
+                                color: Colors.white,
+                              ),
+                            ),
+                            onPressed: () {
+                              provider.login(
+                                  email.text, password.text, context);
+                              print(email.value);
+                              print(password.text);
+                              Navigator.push(
+                                context,
+                                _createRoute(),
+                              );
+                            })),
+                  ),
                   SizedBox(
                     height: 5,
                   ),
@@ -247,7 +273,7 @@ class _login_screenState extends State<login_screen> {
                       child: Container(
                         child: ListTile(
                           title: Text(
-                            'Connects with Facebook',
+                            'Connect with Facebook',
                             style: TextStyle(
                               fontFamily: 'Roboto',
                               color: Colors.white,
@@ -279,7 +305,7 @@ class _login_screenState extends State<login_screen> {
                         child: Container(
                           child: ListTile(
                             title: Text(
-                              'Connects with Goggle',
+                              'Connect with Google',
                               style: TextStyle(
                                 fontFamily: 'Roboto',
                                 color: Colors.white,
@@ -305,119 +331,128 @@ class _login_screenState extends State<login_screen> {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Failed to Login")));
     } else {
-      var a = user.displayName;
-      var b = user.email;
-      print(a);
-      print(b);
-      signs();
+      nam = user.displayName;
+      ema = user.email;
+      // print( user.displayName.toString());
+      // print(user.email.toString());
+      print(nam);
+      print(ema);
+
+      siin;
+      // Navigator.of(context)
+      //     .pushReplacement(MaterialPageRoute(builder: (context) => dem()));
+
+      // // }
     }
-  }
+    Future signs() async {
+      final multipartRequest = new http.MultipartRequest("POST",
+          Uri.parse("https://dnpprojects.com/demo/comshop/api/googleLogin"));
 
-  Future signs() async {
-    final multipartRequest = new http.MultipartRequest("POST",
-        Uri.parse("https://dnpprojects.com/demo/comshop/api/googleLogin"));
-
-    multipartRequest.fields.addAll({
-      "name": user.displayName.text,
-      "email": _email.text,
-    });
-    http.StreamedResponse response = await multipartRequest.send();
-
-    var responseString = await response.stream.bytesToString();
-
-    if (response.statusCode == 200) {
-      setState(() {
-        visible = false;
+      multipartRequest.fields.addAll({
+        "name": nam,
+        "email": ema,
       });
-    }
-    if (responseString ==
-        '{"success":false,"message":"Validation Error.","data":{"email":["The email has already been taken."]}}') {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 80,
-                  width: 80,
-                  child: Image.asset(
-                    'images/crs.png',
+      http.StreamedResponse response = await multipartRequest.send();
+
+      var responseString = await response.stream.bytesToString();
+
+      if (response.statusCode == 200) {
+        setState(() {
+          print(nam);
+          print(ema);
+          visible = false;
+        });
+      }
+      if (responseString ==
+          '{"success":false,"message":"Validation Error.","data":{"email":["The email has already been taken."]}}') {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
                     height: 80,
                     width: 80,
+                    child: Image.asset(
+                      'images/crs.png',
+                      height: 80,
+                      width: 80,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  "Email Address has Already Registered",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Email Address has Already Registered",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  child: new Text("OK"),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => login_screen()),
+                    );
+                  },
                 ),
               ],
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child: new Text("OK"),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => login_screen()),
-                  );
-                },
-              ),
-            ],
-          );
-        },
-      );
-    } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Column(
-              children: [
-                Container(
-                  height: 80,
-                  width: 80,
-                  child: Image.asset(
-                    'images/chk.png',
+            );
+          },
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Column(
+                children: [
+                  Container(
                     height: 80,
                     width: 80,
+                    child: Image.asset(
+                      'images/chk.png',
+                      height: 80,
+                      width: 80,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                new Text(
-                  "User Register Sucessfully",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  new Text(
+                    "User Register Sucessfully",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  child: new Text("OK"),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => find_resturent()),
+                    );
+                  },
                 ),
               ],
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child: new Text("OK"),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            phone_number_screen()),
-                  );
-                },
-              ),
-            ],
-          );
-        },
-      );
+            );
+          },
+        );
+      }
+
+      print("response: " + responseString);
+      print("response Status: ${response.statusCode}");
     }
 
-    print("response: " + responseString);
-    print("response Status: ${response.statusCode}");
+    siin = signs();
   }
 }

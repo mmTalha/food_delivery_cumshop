@@ -21,11 +21,10 @@ class HomeScreen extends StatelessWidget {
           onDone: () {
             print('done tapped');
             Navigator.push(
-            context,
-            MaterialPageRoute(
-            builder: (context) => login_screen()),
-
-            );},
+              context,
+              MaterialPageRoute(builder: (context) => login_screen()),
+            );
+          },
           onBoardData: onBoardData,
           titleStyles: const TextStyle(
             color: Color.fromRGBO(1, 15, 7, 1),
@@ -40,7 +39,7 @@ class HomeScreen extends StatelessWidget {
           pageIndicatorStyle: const PageIndicatorStyle(
             width: 100,
             inactiveColor: Color.fromRGBO(252, 186, 24, 1),
-            activeColor:Color.fromRGBO(252, 186, 24, 1),
+            activeColor: Color.fromRGBO(252, 186, 24, 1),
             inactiveSize: Size(8, 8),
             activeSize: Size(12, 12),
           ),
@@ -99,24 +98,20 @@ class HomeScreen extends StatelessWidget {
 final List<OnBoardModel> onBoardData = [
   const OnBoardModel(
     title: "All your favorites",
-    description: "Order from the best local restaurants with easy, on-demand delivery.",
+    description:
+        "Order from the best local restaurants with\neasy, on-demand delivery.",
     imgUrl: "images/onboarding1.png",
   ),
   const OnBoardModel(
     title: "Free delivery offers",
     description:
-    "Free delivery for new customers via Apple Pay and others payment methods.",
+        "Free delivery for new customers via Apple Pay and others payment methods.",
     imgUrl: 'images/onboarding2.png',
   ),
   const OnBoardModel(
     title: "Choose your food",
     description:
-    "Easily find your type of food craving and you’ll get delivery in wide range.",
+        "Easily find your type of food craving and you’ll get delivery in wide range.",
     imgUrl: 'images/onboarding3.png',
   ),
-
 ];
-
-
-
-

@@ -23,15 +23,15 @@ import 'package:provider/provider.dart';
 class dashboard_screen extends StatefulWidget {
   final lat;
   final lon;
-late final address;
-  dashboard_screen({Key? key, this.lat, this.lon, this.address}) : super(key: key);
+  late final address;
+  dashboard_screen({Key? key, this.lat, this.lon, this.address})
+      : super(key: key);
 
   @override
   _dashboard_screenState createState() => _dashboard_screenState();
 }
 
 class _dashboard_screenState extends State<dashboard_screen> {
-
   Position? _currentPosition;
   String? _currentAddress;
   String Address = 'search';
@@ -118,7 +118,7 @@ class _dashboard_screenState extends State<dashboard_screen> {
               height: 5,
             ),
             Text('$passed_data',
-                style: TextStyle(color: Colors.black, fontSize: 22)),
+                style: TextStyle(color: Colors.black, fontSize: 16)),
           ],
         ),
         actions: [
@@ -137,7 +137,10 @@ class _dashboard_screenState extends State<dashboard_screen> {
                       badgeColor: Color.fromRGBO(252, 186, 24, 1),
                       animationType: BadgeAnimationType.slide,
                       badgeContent: Text('${badge.cartvalue}'),
-                      child: Image.asset('images/carticon.png'))),
+                      child: Image.asset(
+                        'images/carticon.png',
+                        color: Color.fromRGBO(252, 186, 24, 1),
+                      ))),
             ),
           )
         ],
@@ -147,7 +150,6 @@ class _dashboard_screenState extends State<dashboard_screen> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.only(left: 10,right: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -187,58 +189,79 @@ class _dashboard_screenState extends State<dashboard_screen> {
                   );
                 }).toList(),
               ),
-           SizedBox(height: 20,),
+              SizedBox(
+                height: 10,
+              ),
 
               FutureBuilder(
-                future:  menuprovider.menuitems(  ),
+                future: menuprovider.menuitems(),
                 builder: (c, AsyncSnapshot snapshot) {
                   if (!snapshot.hasData)
                     return Align(
                         alignment: Alignment.center,
-                        child: Column(children: [
-                          Text('Sorry,We are not there yet',style: TextStyle(fontSize: 20,color: Colors.black,),),
-                          SizedBox(height: 10,),
-                           Image.asset('images/sad_emojie.png',height: 70,width: 70,),
-
-
-                        ],));
+                        child: Column(
+                          children: [
+                            Text(
+                              'Sorry,We are not there yet',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.black,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Image.asset(
+                              'images/sad_emojie.png',
+                              height: 70,
+                              width: 70,
+                            ),
+                          ],
+                        ));
 
                   if (snapshot.hasData) {
-                    return  Center(
+                    return Center(
                       child: ListView.builder(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
-                          itemCount: snapshot.data['data'].length==null?null:snapshot.data['data'].length,
+                          itemCount: snapshot.data['data'].length == null
+                              ? null
+                              : snapshot.data['data'].length,
                           itemBuilder: (BuildContext context, int index) {
-                            return   Center(
+                            return Center(
                               child: GestureDetector(
                                 onTap: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => product(
-                                          id: snapshot.data['data'][index]['id'],
-                                          name: snapshot.data['data'][index]['name'],
-                                          img: '${menuprovider.imageurl}${snapshot.data['data'][index]['logo_img']}',
-                                        )),
+                                              id: snapshot.data['data'][index]
+                                                  ['id'],
+                                              name: snapshot.data['data'][index]
+                                                  ['name'],
+                                              img:
+                                                  '${menuprovider.imageurl}${snapshot.data['data'][index]['logo_img']}',
+                                            )),
                                   );
                                 },
                                 child: Container(
-                                  margin: EdgeInsets.only(left: 15,right: 15),
-                                  width: 335,
+                                  padding: EdgeInsets.only(left: 8, right: 8),
+                                  margin: EdgeInsets.only(left: 15, right: 15),
+                                  width: double.infinity,
                                   height: 270,
                                   child: Column(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.center,
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       ClipRRect(
                                         borderRadius:
-                                        BorderRadius.circular(15.0),
+                                            BorderRadius.circular(15.0),
                                         child: Image.network(
                                           '${menuprovider.imageurl}${snapshot.data['data'][index]['logo_img']}',
                                           height: 200,
+                                          width: double.infinity,
+                                          fit: BoxFit.fill,
                                         ),
                                       ),
                                       SizedBox(
@@ -248,12 +271,12 @@ class _dashboard_screenState extends State<dashboard_screen> {
                                         '${snapshot.data['data'][index]['name']}',
                                         style: TextStyle(
                                             color: Colors.black,
-                                            fontSize: 20),
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w500),
                                       ),
                                       SizedBox(
                                         height: 5,
                                       ),
-
                                       Row(
                                         children: [
                                           Text(
@@ -262,8 +285,7 @@ class _dashboard_screenState extends State<dashboard_screen> {
                                                 color: Color.fromRGBO(
                                                     134, 134, 134, 1),
                                                 fontSize: 14,
-                                                fontWeight:
-                                                FontWeight.w400),
+                                                fontWeight: FontWeight.w400),
                                           ),
                                           SizedBox(
                                             width: 5,
@@ -271,8 +293,8 @@ class _dashboard_screenState extends State<dashboard_screen> {
                                           Icon(
                                             Icons.star,
                                             size: 11,
-                                            color: Color.fromRGBO(
-                                                252, 186, 24, 1),
+                                            color:
+                                                Color.fromRGBO(252, 186, 24, 1),
                                           ),
                                           SizedBox(
                                             width: 5,
@@ -283,10 +305,8 @@ class _dashboard_screenState extends State<dashboard_screen> {
                                                 color: Color.fromRGBO(
                                                     134, 134, 134, 1),
                                                 fontSize: 14,
-                                                fontWeight:
-                                                FontWeight.w400),
+                                                fontWeight: FontWeight.w400),
                                           ),
-
                                           SizedBox(
                                             width: 5,
                                           ),
@@ -305,8 +325,7 @@ class _dashboard_screenState extends State<dashboard_screen> {
                                                 color: Color.fromRGBO(
                                                     134, 134, 134, 1),
                                                 fontSize: 14,
-                                                fontWeight:
-                                                FontWeight.w400),
+                                                fontWeight: FontWeight.w400),
                                           ),
                                         ],
                                       )
@@ -317,7 +336,6 @@ class _dashboard_screenState extends State<dashboard_screen> {
                             );
                           }),
                     );
-
                   }
                   if (snapshot.hasError) print(snapshot.error.toString());
                   return Align(

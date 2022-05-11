@@ -1,21 +1,31 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:food_app/signin_register_screens/login_screen.dart';
+import 'package:food_app/signin_register_screens/otp_screen.dart';
 import 'package:food_app/signin_register_screens/reset_email_send_screen.dart';
 
-class forgot_password_screen extends StatelessWidget {
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+class forgot_password_screen extends StatefulWidget {
   const forgot_password_screen({Key? key}) : super(key: key);
 
+  @override
+  State<forgot_password_screen> createState() => _forgot_password_screenState();
+}
+
+class _forgot_password_screenState extends State<forgot_password_screen> {
+  @override
+  bool visible = false;
+  final TextEditingController _email = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () => Navigator.of(context).pop(),
           ),
-
           elevation: 0.0,
         ),
         body: Container(
@@ -31,7 +41,11 @@ class forgot_password_screen extends StatelessWidget {
                 SizedBox(
                   height: 10,
                 ),
-                Text('Enter your email address and we will ', style: TextStyle(color: Color.fromRGBO(134, 134, 134, 1), fontSize: 16),),
+                Text(
+                  'Enter your email address and we will ',
+                  style: TextStyle(
+                      color: Color.fromRGBO(134, 134, 134, 1), fontSize: 16),
+                ),
                 SizedBox(
                   height: 5,
                 ),
@@ -39,7 +53,8 @@ class forgot_password_screen extends StatelessWidget {
                     text: TextSpan(children: <TextSpan>[
                   TextSpan(
                     text: "send you a reset instructions.",
-                    style: TextStyle(color: Color.fromRGBO(134, 134, 134, 1), fontSize: 16),
+                    style: TextStyle(
+                        color: Color.fromRGBO(134, 134, 134, 1), fontSize: 16),
                   ),
                 ])),
                 SizedBox(
@@ -53,8 +68,16 @@ class forgot_password_screen extends StatelessWidget {
                     ),
                   ),
                   width: 334,
-                  child: TextField(
-                    keyboardType: TextInputType.phone,
+                  child: TextFormField(
+                    validator: (String? value) {
+                      if (value!.isEmpty) {
+                        return "please enter email";
+                      } else if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
+                        return "Please enter a valid email address";
+                      }
+                      return null;
+                    },
+                    controller: _email,
                     decoration: InputDecoration(
                         suffixStyle: TextStyle(color: Colors.grey),
                         // suffixIcon: Icon(
@@ -66,13 +89,12 @@ class forgot_password_screen extends StatelessWidget {
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide(
-                              color:  Color.fromRGBO(242, 242, 242, 1),
-
+                              color: Color.fromRGBO(242, 242, 242, 1),
                             )),
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide(
-                              color:  Color.fromRGBO(242, 242, 242, 1),
+                              color: Color.fromRGBO(242, 242, 242, 1),
                             )),
                         errorBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -101,16 +123,121 @@ class forgot_password_screen extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      reset_email_screen()),
-
-                            );
+                            emailver();
                           })),
                 ),
               ]),
         ));
+  }
+
+  void emailver() async {
+    final multipartRequest = new http.MultipartRequest("POST",
+        Uri.parse("https://dnpprojects.com/demo/comshop/api/forgetPassword"));
+
+    multipartRequest.fields.addAll({
+      "email": _email.text,
+    });
+    http.StreamedResponse response = await multipartRequest.send();
+
+    var responseString = await response.stream.bytesToString();
+
+    if (response.statusCode == 200) {
+      setState(() {
+        visible = false;
+      });
+    }
+    if (responseString ==
+        '{"success":"We have e-mailed your password reset Code!"}') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (BuildContext context) => otp_screen()),
+      );
+      // showDialog(
+      //   context: context,
+      //   builder: (BuildContext context) {
+      //     return AlertDialog(
+      //       title: Column(
+      //         mainAxisAlignment: MainAxisAlignment.center,
+      //         children: [
+      //           Container(
+      //             height: 80,
+      //             width: 80,
+      //             child: Image.asset(
+      //               'images/crs.png',
+      //               height: 80,
+      //               width: 80,
+      //             ),
+      //           ),
+      //           SizedBox(
+      //             height: 10,
+      //           ),
+      //           Text(
+      //             "Email Address has Already Registered",
+      //             textAlign: TextAlign.center,
+      //             style: TextStyle(fontSize: 16),
+      //           ),
+      //         ],
+      //       ),
+      //       actions: <Widget>[
+      //         FlatButton(
+      //           child: new Text("OK"),
+      //           onPressed: () {
+      //               Navigator.push(
+      //                 context,
+      //                 MaterialPageRoute(
+      //                     builder: (BuildContext context) =>
+      //                         create_acount_screen()),
+      // );
+      //           },
+      //         ),
+      //       ],
+      //     );
+      //   },
+      // );
+    } else {
+      // showDialog(
+      //   context: context,
+      //   builder: (BuildContext context) {
+      //     return AlertDialog(
+      //       title: Column(
+      //         children: [
+      //           Container(
+      //             height: 80,
+      //             width: 80,
+      //             child: Image.asset(
+      //               'images/chk.png',
+      //               height: 80,
+      //               width: 80,
+      //             ),
+      //           ),
+      //           SizedBox(
+      //             height: 10,
+      //           ),
+      //           new Text(
+      //             "User Register Sucessfully",
+      //             textAlign: TextAlign.center,
+      //             style: TextStyle(fontSize: 16),
+      //           ),
+      //         ],
+      //       ),
+      //       actions: <Widget>[
+      //         FlatButton(
+      //           child: new Text("OK"),
+      //           onPressed: () {
+      //             Navigator.push(
+      //               context,
+      //               MaterialPageRoute(
+      //                   builder: (BuildContext context) => login_screen()),
+      //             );
+      //           },
+      //         ),
+      //       ],
+      //     );
+      //   },
+      // );
+    }
+
+    print("response: " + responseString);
+    print("response Status: ${response.statusCode}");
   }
 }

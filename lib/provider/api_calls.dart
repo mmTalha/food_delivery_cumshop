@@ -20,8 +20,7 @@ class api_calls with ChangeNotifier {
   bool cartvalue = false;
   bool isdelete = false;
 
-
-   login(email, password, BuildContext context) async {
+  login(email, password, BuildContext context) async {
     final _prefs = SharedPreferences.getInstance();
     final SharedPreferences prefs = await _prefs;
 
@@ -52,27 +51,20 @@ class api_calls with ChangeNotifier {
       isvalue = false;
       print(gettoken);
       print(datas);
-    }
-    else if(response.statusCode==404)
-    {
+    } else if (response.statusCode == 404) {
       isvalue = false;
       _rotateDialog(context);
-    }
-    else if(response.statusCode==500)
-
-    {
+    } else if (response.statusCode == 500) {
       isvalue = false;
       _rotateDialog(context);
-    }
-    else {
-
+    } else {
       print(isvalue);
       _rotateDialog(context);
 
       var datas = (jsonDecode(response.body));
       print(datas);
       isvalue = false;
-      return ;
+      return;
     }
 
     notifyListeners();
@@ -88,6 +80,7 @@ class api_calls with ChangeNotifier {
     final latitude = prefs.getDouble('latitude');
     print(longtitude);
     print(latitude);
+
     var userHeader = {
       "Accept": "application/json",
       'Authorization': 'Bearer $gettoken',
@@ -100,9 +93,8 @@ class api_calls with ChangeNotifier {
     );
     var data = json.decode(response.body);
     if (data.toString().contains('Not Found')) {
-      return null ;
-    }
-    else {
+      return null;
+    } else {
       print(data);
       return data;
     }
@@ -146,9 +138,7 @@ class api_calls with ChangeNotifier {
       headers: userHeader,
     );
     var datas = jsonDecode(response.body);
-      return datas;
-
-
+    return datas;
   }
 
   void add_to_cart(

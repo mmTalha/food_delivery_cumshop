@@ -2,42 +2,63 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:food_app/signin_register_screens/find_resturent_near_you.dart';
 import 'package:food_app/signin_register_screens/login_screen.dart';
+import 'package:food_app/signin_register_screens/reset_password.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
+import 'package:http/http.dart' as http;
 import 'create_account_screen.dart';
 
-
-class otp_screen extends StatelessWidget {
+class otp_screen extends StatefulWidget {
   const otp_screen({Key? key}) : super(key: key);
+
+  @override
+  State<otp_screen> createState() => _otp_screenState();
+}
+
+class _otp_screenState extends State<otp_screen> {
+  final TextEditingController _otp = TextEditingController();
+  bool visible = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () => Navigator.of(context).pop(),
           ),
-
           elevation: 0.0,
-
-
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-
-            Center(child: Text( 'Verify phone number', style: TextStyle(color: Colors.black, fontSize: 24),)),
-            Center(child: Text( 'Enter the 4-Digit code sent  ', style: TextStyle(color: Color.fromRGBO(134, 134, 134, 1), fontSize: 16),)),
-            Center(child: Text( 'to you at +1501333982 ', style: TextStyle(color: Color.fromRGBO(134, 134, 134, 1), fontSize: 16),)),
-            SizedBox(height: 30,),
+            Center(
+                child: Text(
+              'Verify Email',
+              style: TextStyle(color: Colors.black, fontSize: 24),
+            )),
+            Center(
+                child: Text(
+              'Enter the 4-Digit code sent  ',
+              style: TextStyle(
+                  color: Color.fromRGBO(134, 134, 134, 1), fontSize: 16),
+            )),
+            Center(
+                child: Text(
+              'to your mail',
+              style: TextStyle(
+                  color: Color.fromRGBO(134, 134, 134, 1), fontSize: 16),
+            )),
+            SizedBox(
+              height: 30,
+            ),
             Container(
               padding: EdgeInsets.only(left: 50, right: 50),
               child: PinCodeTextField(
+                controller: _otp,
                 // controller:otpfield123  ,
-                length: 4,
+                length: 6,
                 obscureText: false,
                 animationType: AnimationType.fade,
 
@@ -92,49 +113,167 @@ class otp_screen extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        Navigator.push (
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  find_resturent()),
-
-                        );
-                      }
-
-
-
-                  )
-              ),
+                        print(_otp.text);
+                        otpver();
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //       builder: (BuildContext context) =>
+                        //           find_resturent()),
+                        // );
+                      })),
             ),
-            SizedBox(height: 10,),
+            SizedBox(
+              height: 10,
+            ),
             RichText(
                 text: TextSpan(children: <TextSpan>[
-                  TextSpan(
-                    text: "Didn’t receive code? ",
-
-
-                    style: TextStyle(color: Colors.black, fontSize: 12),
-                  ),
-                  TextSpan(
-                    text: "Resend Again.",
-                    style: TextStyle(
-                      color: Color.fromRGBO(252, 186, 24, 1),
-                    ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => login_screen()),
-                        );
-                      },
-                  ),
-                ])),
-            SizedBox(height: 10,),
-            Center(child: Text( 'By Signing up you agree to our ', style: TextStyle(color: Color.fromRGBO(134, 134, 134, 1), fontSize: 16),)),
-            Center(child: Text( 'Terms Conditions & Privacy Policy.', style: TextStyle(color: Color.fromRGBO(134, 134, 134, 1), fontSize: 16),)),
+              TextSpan(
+                text: "Didn’t receive code? ",
+                style: TextStyle(color: Colors.black, fontSize: 12),
+              ),
+              TextSpan(
+                text: "Resend Again.",
+                style: TextStyle(
+                  color: Color.fromRGBO(252, 186, 24, 1),
+                ),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => login_screen()),
+                    );
+                  },
+              ),
+            ])),
+            SizedBox(
+              height: 10,
+            ),
+            Center(
+                child: Text(
+              'By Signing up you agree to our ',
+              style: TextStyle(
+                  color: Color.fromRGBO(134, 134, 134, 1), fontSize: 16),
+            )),
+            Center(
+                child: Text(
+              'Terms Conditions & Privacy Policy.',
+              style: TextStyle(
+                  color: Color.fromRGBO(134, 134, 134, 1), fontSize: 16),
+            )),
           ],
-        )
-    );
+        ));
+  }
+
+  void otpver() async {
+    final multipartRequest = new http.MultipartRequest(
+        "POST", Uri.parse("https://dnpprojects.com/demo/comshop/api/userOtp"));
+
+    multipartRequest.fields.addAll({
+      "otp": _otp.text,
+    });
+    http.StreamedResponse response = await multipartRequest.send();
+
+    var responseString = await response.stream.bytesToString();
+
+    if (response.statusCode == 200) {
+      setState(() {
+        visible = false;
+      });
+    }
+    if (responseString == '{"success":"Your code has been matched! "}') {
+      var ab = _otp.text;
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) => reset_password(otpp: ab)),
+      );
+      // showDialog(
+      //   context: context,
+      //   builder: (BuildContext context) {
+      //     return AlertDialog(
+      //       title: Column(
+      //         mainAxisAlignment: MainAxisAlignment.center,
+      //         children: [
+      //           Container(
+      //             height: 80,
+      //             width: 80,
+      //             child: Image.asset(
+      //               'images/crs.png',
+      //               height: 80,
+      //               width: 80,
+      //             ),
+      //           ),
+      //           SizedBox(
+      //             height: 10,
+      //           ),
+      //           Text(
+      //             "Email Address has Already Registered",
+      //             textAlign: TextAlign.center,
+      //             style: TextStyle(fontSize: 16),
+      //           ),
+      //         ],
+      //       ),
+      //       actions: <Widget>[
+      //         FlatButton(
+      //           child: new Text("OK"),
+      //           onPressed: () {
+      //               Navigator.push(
+      //                 context,
+      //                 MaterialPageRoute(
+      //                     builder: (BuildContext context) =>
+      //                         create_acount_screen()),
+      // );
+      //           },
+      //         ),
+      //       ],
+      //     );
+      //   },
+      // );
+    } else {
+      // showDialog(
+      //   context: context,
+      //   builder: (BuildContext context) {
+      //     return AlertDialog(
+      //       title: Column(
+      //         children: [
+      //           Container(
+      //             height: 80,
+      //             width: 80,
+      //             child: Image.asset(
+      //               'images/chk.png',
+      //               height: 80,
+      //               width: 80,
+      //             ),
+      //           ),
+      //           SizedBox(
+      //             height: 10,
+      //           ),
+      //           new Text(
+      //             "User Register Sucessfully",
+      //             textAlign: TextAlign.center,
+      //             style: TextStyle(fontSize: 16),
+      //           ),
+      //         ],
+      //       ),
+      //       actions: <Widget>[
+      //         FlatButton(
+      //           child: new Text("OK"),
+      //           onPressed: () {
+      //             Navigator.push(
+      //               context,
+      //               MaterialPageRoute(
+      //                   builder: (BuildContext context) => login_screen()),
+      //             );
+      //           },
+      //         ),
+      //       ],
+      //     );
+      //   },
+      // );
+    }
+
+    print("response: " + responseString);
+    print("response Status: ${response.statusCode}");
   }
 }

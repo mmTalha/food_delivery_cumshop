@@ -3,8 +3,6 @@ import 'package:food_app/signin_register_screens/login_screen.dart';
 
 import 'onboarding_model.dart';
 
-
-
 class Onbording extends StatefulWidget {
   @override
   _OnbordingState createState() => _OnbordingState();
@@ -29,8 +27,7 @@ class _OnbordingState extends State<Onbording> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(255, 255, 255, 1
-      ),
+      backgroundColor: Color.fromRGBO(255, 255, 255, 1),
       body: Column(
         children: [
           Expanded(
@@ -44,19 +41,21 @@ class _OnbordingState extends State<Onbording> {
               },
               itemBuilder: (_, i) {
                 return Padding(
-                  padding: const EdgeInsets.all(40),
+                  padding: const EdgeInsets.all(20),
                   child: Column(
                     children: [
                       Image.asset(
                         contents[i].image,
                         height: 300,
                       ),
-                      SizedBox(height:  50,),
+                      SizedBox(
+                        height: 50,
+                      ),
                       Text(
                         contents[i].title,
                         style: TextStyle(
                           color: Color.fromRGBO(1, 15, 7, 1),
-                          fontSize: 18,
+                          fontSize: 17,
                           fontWeight: FontWeight.w900,
                         ),
                       ),
@@ -80,12 +79,11 @@ class _OnbordingState extends State<Onbording> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
                 contents.length,
-                    (index) => buildDot(index, context),
+                (index) => buildDot(index, context),
               ),
             ),
           ),
           Container(
-
             height: 60,
             margin: EdgeInsets.all(40),
             width: double.infinity,
