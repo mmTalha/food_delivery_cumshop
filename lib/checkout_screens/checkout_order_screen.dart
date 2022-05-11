@@ -4,6 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:food_app/checkout_screens/add_your_payment%20_screen.dart';
 import 'package:food_app/checkout_screens/stepper.dart';
 import 'package:food_app/provider/api_calls.dart';
+import 'package:food_app/provider/cartprovider.dart';
+import 'package:food_app/widgets/dashboard_widget.dart';
 import 'package:provider/provider.dart';
 
 class checkout_order_screens extends StatelessWidget {
@@ -13,7 +15,13 @@ class checkout_order_screens extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cart = Provider.of<api_calls>(context);
+
+    var remove = 0;
+    var id;
+    double subtotal = 0;
+    final cart = Provider.of<api_calls>(context, listen: true);
+    var userid;
+    var resturentid;
     return Scaffold(
       appBar: AppBar(
         title:
@@ -22,9 +30,14 @@ class checkout_order_screens extends StatelessWidget {
         elevation: 0.0,
       ),
       body: SingleChildScrollView(
-        child: FutureBuilder(
+        child:
+        FutureBuilder(
           future: cart.get_cart(),
           builder: (c, AsyncSnapshot snap) {
+            if (!snap.hasData)
+              return Align(
+                  alignment: Alignment.center,
+                  child: Image.asset('images/loader.gif'));
             if (snap.hasData) {
               return SafeArea(
                 child: Container(
@@ -38,7 +51,19 @@ class checkout_order_screens extends StatelessWidget {
                           shrinkWrap: true,
                           itemCount: snap.data['AllcartSRecords'].length,
                           itemBuilder: (ctx, index) {
-                            print(snap.data['AllcartSRecords'][0]['user_id']);
+
+                           resturentid = snap.data['AllcartSRecords'][index]['restaurant_id'];
+                            id = snap.data['AllcartSRecords'][index]['id'];
+                            userid = snap.data['AllcartSRecords'][index]['user_id'];
+                            var price = snap.data['AllcartSRecords'][index]
+                                    ['price'] *
+                                snap.data['AllcartSRecords'][index]['quantity'];
+                            var cartid =
+                                snap.data['AllcartSRecords'][index]['id'];
+                            var quantity =
+                                snap.data['AllcartSRecords'][index]['quantity'];
+                            subtotal = subtotal + price;
+                            price = price;
                             return Container(
                               child: Row(
                                 mainAxisAlignment:
@@ -67,8 +92,9 @@ class checkout_order_screens extends StatelessWidget {
                                                         BorderRadius.circular(
                                                             5)),
                                                 child: Center(
-                                                    child: Text(
-                                                  '1',
+                                                    child:
+                                                Text(
+                                                  '${index+1}',
                                                   style: TextStyle(
                                                       color: Color.fromRGBO(
                                                           252, 186, 24, 1),
@@ -83,7 +109,7 @@ class checkout_order_screens extends StatelessWidget {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    'Cookie Sandwich',
+                                                    '${snap.data['AllcartSRecords'][index]['prod']['title']}',
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 18),
@@ -91,31 +117,64 @@ class checkout_order_screens extends StatelessWidget {
                                                   SizedBox(
                                                     height: 5,
                                                   ),
-                                                  Text(
-                                                    'Shortbread, chocolate turtle \n cookies, and red velvet.',
-                                                    style: TextStyle(
-                                                      color: Color.fromRGBO(
-                                                          1, 15, 7, 1),
-                                                      fontSize: 16,
+                                                  SizedBox(
+                                                    width: 200,
+                                                    child: Text(
+                                                      '${snap.data['AllcartSRecords'][index]['prod']['description']}',
+                                                      style: TextStyle(
+                                                        color: Color.fromRGBO(
+                                                            1, 15, 7, 1),
+                                                        fontSize: 16,
+                                                      ),
                                                     ),
                                                   ),
+
                                                   Row(
                                                     children: [
                                                       IconButton(
-                                                          onPressed: () {},
-                                                          icon: Icon(
+                                                          onPressed: () {
+                                                            cart.isdelete = true;
+                                                            print(cart.cartvalue);
+                                                            quantity == 1
+                                                                ? null
+                                                                : cart
+                                                                    .update_cart(
+                                                                        cartid,
+                                                                        remove);
+                                                            print('remove');
+
+                                                          },
+                                                          icon: cart.isdelete?dashboardwidget().cicularbar()
+                                                              : Icon(
                                                               Icons.remove)),
-                                                      Text('1'),
+                                                      cart.cartvalue?dashboardwidget().cicularbar()
+                                                          :Text(
+                                                          '${snap.data['AllcartSRecords'][index]['quantity']}'),
                                                       IconButton(
-                                                          onPressed: () {},
+                                                          onPressed: () {
+                                                            cart.cartvalue = true;
+                                                            cart.update_cart(
+                                                                cartid, 1);
+                                                            print('add');
+                                                          },
                                                           icon:
                                                               Icon(Icons.add)),
-                                                      IconButton(
-                                                          onPressed: () {},
-                                                          icon: Icon(
-                                                            Icons.delete,
-                                                            color: Colors.red,
-                                                          )),
+                                                      Consumer<api_calls>(
+                                                          builder: (context,
+                                                              provider, child) {
+                                                        return IconButton(
+                                                            onPressed: () {
+                                                              cart.cartvalue = true;
+                                                              print(id);
+                                                              provider
+                                                                  .delete_cart(
+                                                                      id);
+                                                            },
+                                                            icon: Icon(
+                                                              Icons.delete,
+                                                              color: Colors.red,
+                                                            ));
+                                                      }),
                                                     ],
                                                   )
                                                 ],
@@ -131,8 +190,7 @@ class checkout_order_screens extends StatelessWidget {
                                     ],
                                   ),
                                   Text(
-                                    '\$' +
-                                        '${snap.data['AllcartSRecords'][0]['price']}',
+                                    '\$'+'${price.toString()}',
                                     style: TextStyle(
                                         color: Color.fromRGBO(252, 186, 24, 1),
                                         fontSize: 16),
@@ -146,28 +204,23 @@ class checkout_order_screens extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text('Subtotal'),
-                          Text('\$29.4\$0'),
+                          Text('\$${snap.data['sub_total']}'),
                         ],
                       ),
-                      SizedBox(height: 10,),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Subtotal '),
-                          Text('\$29.4\$0'),
-                        ],
+                      SizedBox(
+                        height: 10,
                       ),
-                      SizedBox(height: 10,),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text('Total (incl. VAT) '),
-                          Text('\$29.4'),
+                          Text('\$${snap.data['total']}'),
                         ],
                       ),
-                      SizedBox(height: 10,),
+                      SizedBox(
+                        height: 10,
+                      ),
                       Center(
                         child: Container(
                             height: 50,
@@ -177,7 +230,7 @@ class checkout_order_screens extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(10)),
                                 color: Color.fromRGBO(252, 186, 24, 1),
                                 child: Text(
-                                  'Continue (\$11.98)',
+                                  'Continue (\$${snap.data['total']})',
                                   style: TextStyle(
                                     fontFamily: 'Roboto',
                                     color: Colors.white,
@@ -188,7 +241,15 @@ class checkout_order_screens extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (BuildContext context) =>
-                                          StepperDemo(),
+                                          StepperDemo(
+                                            id: id,
+                                            paymentmethod: 'cod',
+                                            resturent_id: resturentid,
+                                            subtotal:{snap.data['total']},
+                                            total_price:snap.data['sub_total'] ,
+                                            userid: userid,
+                                            vat_value:snap.data['Vat'] ,
+                                          ),
                                       //     add_your_payment_screen()
                                     ),
                                   );
