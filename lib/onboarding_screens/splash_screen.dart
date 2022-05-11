@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:food_app/onboarding_screens/onboarding.dart';
 import 'package:food_app/onboarding_screens/onborading_screen.dart';
+import 'package:food_app/signin_register_screens/find_resturent_near_you.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 
@@ -18,12 +20,25 @@ class IntroPage extends StatefulWidget {
 }
 
 class _IntroPageState extends State<IntroPage> with TickerProviderStateMixin {
-
+  var token;
+  Future token1()async{
+    final _prefs = SharedPreferences.getInstance();
+    final SharedPreferences prefs = await _prefs;
+    final gettoken = prefs.getString('new');
+    token = gettoken;
+  }
+@override
+  void initState()  {
+  token1();
+  print(token);
+    super.initState();
+  }
   @override
+
   Widget build(BuildContext context) {
     return AnimatedSplashScreen(
       splash: 'images/splash.png',splashIconSize: 200,
-      nextScreen: Onbording(),
+      nextScreen:token==null? Onbording():find_resturent(),
       splashTransition: SplashTransition. sizeTransition,
 
       backgroundColor: Color.fromRGBO( 24, 193, 128,1),
