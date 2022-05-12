@@ -1,9 +1,6 @@
-import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
-import 'package:food_app/checkout_screens/checkout_order_screen.dart';
 import 'package:food_app/details_screen/details_screen_product.dart';
 import 'package:food_app/provider/api_calls.dart';
-import 'package:food_app/provider/cartprovider.dart';
 import 'package:provider/provider.dart';
 
 class product extends StatefulWidget {
@@ -21,84 +18,26 @@ class _productState extends State<product> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final badge = Provider.of<cartprovider>(context);
     final detailsmenu = Provider.of<api_calls>(context);
-    var imgurl =
-        'https://dnpprojects.com/demo/comshop/public/storage/restaurant/menu/';
-
+    var imgurl ='https://dnpprojects.com/demo/comshop/public/storage/restaurant/menu/';
+        
     return Scaffold(
       body: Column(
         children: [
           Container(
-              height: 200,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                borderRadius: new BorderRadius.vertical(
-                    bottom: new Radius.elliptical(
-                        MediaQuery.of(context).size.width, 70.0)),
-                image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: NetworkImage(
-                    widget.img,
-                  ),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8, right: 15, top: 30),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                          ),
-                          child: Icon(
-                            Icons.arrow_back_ios,
-                            color: Color.fromRGBO(252, 186, 24, 1),
-                          )),
-                    ),
-                    Container(
-                      height: 40,
-                      width: 40,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                      ),
-                      child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      checkout_order_screens()),
-                            );
-                          },
-                          child: Badge(
-                            badgeColor: Color.fromRGBO(252, 186, 24, 1),
-                            animationType: BadgeAnimationType.slide,
-                            badgeContent: Text('${badge.cartvalue}'),
-                            child: Image.asset(
-                              'images/carticon.png',
-                              color: Color.fromRGBO(252, 186, 24, 1),
-                            ),
-                          )),
-                    ),
-                  ],
-                ),
-              )),
+            height: 280,
+            width: MediaQuery.of(context).size.width,
+            child: Image.network(
+             widget.img,
+              fit: BoxFit.cover,
+            ),
+          ),
           Expanded(
-              child: FutureBuilder(
-            future: detailsmenu.details_product(widget.id),
-            builder: (c, AsyncSnapshot s) {
-              //print(menus_ini[0]['price']);
+              child:
+              FutureBuilder(
+               future: detailsmenu.details_product(widget.id),
+              builder: (c, AsyncSnapshot s) {
+               //print(menus_ini[0]['price']);
               if (s.hasData) {
                 menus_ini = s.data['categories'][0]['menu'];
                 List<Tab> tabs = <Tab>[];
@@ -114,7 +53,7 @@ class _productState extends State<product> with TickerProviderStateMixin {
                 return DefaultTabController(
                   length: s.data['categories'].length,
                   child: Scaffold(
-                      backgroundColor: Colors.white,
+                    backgroundColor: Colors.white,
                       appBar: PreferredSize(
                         preferredSize: Size.fromHeight(30),
                         child: Container(
@@ -140,7 +79,7 @@ class _productState extends State<product> with TickerProviderStateMixin {
                         padding:
                             const EdgeInsets.only(left: 5, right: 5, top: 20),
                         child: GridView.builder(
-                            // physics:ScrollPhysics.
+                            physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: menus_id == null
                                 ? menus_ini.length
@@ -153,40 +92,27 @@ class _productState extends State<product> with TickerProviderStateMixin {
                                     mainAxisSpacing: 10),
                             itemBuilder: (BuildContext context, int i) {
                               return GestureDetector(
-                                onTap: () {
+                                onTap: (){
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            details_screen_products(
-                                              id: menus_id == null
-                                                  ? menus_ini[i]['id']
-                                                  : menus_id[i]['id'],
-                                              image: imgurl +
-                                                  (menus_id == null
-                                                      ? menus_ini[i]['image']
-                                                      : menus_id[i]['image']),
-                                            )),
+                                        builder: (context) =>details_screen_products(
+                                          resturentid: menus_id == null? menus_ini[i]['restaurant_id'] : menus_id[i]['restaurant_id'] ,
+                                         id:  menus_id == null? menus_ini[i]['id'] : menus_id[i]['id'],
+                                        image:imgurl + (menus_id == null ? menus_ini[i]['image'] : menus_id[i]['image']),
+                                        ) ),
                                   );
                                 },
                                 child: Container(
                                     padding: EdgeInsets.only(
-                                        left: 10,
-                                        right: 15,
-                                        top: 10,
-                                        bottom: 10),
+                                        left: 10, right: 15, top: 10, bottom: 10),
                                     height: 130,
                                     width: 145,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(15),
                                       image: DecorationImage(
-                                        colorFilter: ColorFilter.mode(
-                                            Colors.black.withOpacity(0.8),
-                                            BlendMode.dstATop),
-                                        image: NetworkImage(imgurl +
-                                            (menus_id == null
-                                                ? menus_ini[i]['image']
-                                                : menus_id[i]['image'])),
+                                        image: NetworkImage(imgurl + (menus_id == null ? menus_ini[i]['image'] : menus_id[i]['image'])),
+
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -214,7 +140,7 @@ class _productState extends State<product> with TickerProviderStateMixin {
                                                   BorderRadius.circular(22),
                                             ),
                                             child: Center(
-                                                child: Text("\$"
+                                                child: Text(
                                                     '${menus_id == null ? menus_ini[i]['price'].toString() : menus_id[i]['price'].toString()}')),
                                           ),
                                         ),
@@ -222,13 +148,19 @@ class _productState extends State<product> with TickerProviderStateMixin {
                                     )),
                               );
                             }),
-                      )),
+                      )
+
+                      ),
                 );
               }
               if (s.hasError) print(s.error.toString());
-              return Center(child: Image.asset('images/loader.gif'));
+              return Center(
+                  child: Image.asset('images/loader.gif'));
             },
-          )),
+
+
+          )
+          ),
         ],
       ),
     );

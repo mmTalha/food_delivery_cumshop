@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_app/checkout_screens/checkout_order_screen.dart';
+import 'package:food_app/checkout_screens/order_complete_screen.dart';
 import 'package:food_app/details_screen/details_screen_product.dart';
 import 'package:food_app/details_screen/product.dart';
 import 'package:food_app/models/menu_models.dart';
@@ -13,6 +14,8 @@ import 'package:food_app/provider/api_calls.dart';
 import 'package:food_app/provider/cartprovider.dart';
 import 'package:food_app/see_all_screens/see_all_resturent_screen.dart';
 import 'package:food_app/see_all_screens/see_featured_partners.dart';
+import 'package:food_app/widgets/dashboard_widget.dart';
+import 'package:food_app/widgets/inherited_widget.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
@@ -20,14 +23,15 @@ import 'package:provider/provider.dart';
 class dashboard_screen extends StatefulWidget {
   final lat;
   final lon;
-
-  dashboard_screen({Key? key, this.lat, this.lon}) : super(key: key);
+late final address;
+  dashboard_screen({Key? key, this.lat, this.lon, this.address}) : super(key: key);
 
   @override
   _dashboard_screenState createState() => _dashboard_screenState();
 }
 
 class _dashboard_screenState extends State<dashboard_screen> {
+
   Position? _currentPosition;
   String? _currentAddress;
   String Address = 'search';
@@ -63,7 +67,7 @@ class _dashboard_screenState extends State<dashboard_screen> {
     Position position = await _getGeoLocationPosition();
     List<Placemark> placemarks =
         await placemarkFromCoordinates(position.latitude, position.longitude);
-    print(placemarks);
+    // print(placemarks);
     Placemark place = placemarks[0];
     Address =
         '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
@@ -71,20 +75,25 @@ class _dashboard_screenState extends State<dashboard_screen> {
     setState(() {
       locate = '${place.subLocality}';
     });
+
     // print(locate);
   }
 
   @override
   void initState() {
     GetAddressFromLatLong();
+    print(widget.lat);
+    print('${widget.lon}new');
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final passed_data = InheritedDataProvider.of(context)!.data;
     final badge = Provider.of<cartprovider>(context);
     final menuprovider = Provider.of<api_calls>(context);
-
+    menuprovider.locate = Address;
     final List<String> images = [
       'images/sliderone.png',
       'images/slidertwo.png',
@@ -108,7 +117,7 @@ class _dashboard_screenState extends State<dashboard_screen> {
             SizedBox(
               height: 5,
             ),
-            Text('$locate',
+            Text('$passed_data',
                 style: TextStyle(color: Colors.black, fontSize: 22)),
           ],
         ),
@@ -128,10 +137,7 @@ class _dashboard_screenState extends State<dashboard_screen> {
                       badgeColor: Color.fromRGBO(252, 186, 24, 1),
                       animationType: BadgeAnimationType.slide,
                       badgeContent: Text('${badge.cartvalue}'),
-                      child: Image.asset(
-                        'images/carticon.png',
-                        color: Color.fromRGBO(252, 186, 24, 1),
-                      ))),
+                      child: Image.asset('images/carticon.png'))),
             ),
           )
         ],
@@ -141,7 +147,7 @@ class _dashboard_screenState extends State<dashboard_screen> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.only(left: 10),
+          padding: EdgeInsets.only(left: 10,right: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -181,526 +187,373 @@ class _dashboard_screenState extends State<dashboard_screen> {
                   );
                 }).toList(),
               ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                padding: EdgeInsets.only(right: 15),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Top Restaurants',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => details_screen_products()),
-                        );
-                      },
-                      child: Text(
-                        ' See all',
-                        style: TextStyle(
-                          color: Color.fromRGBO(252, 186, 24, 1),
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 254,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: images.length,
-                  itemBuilder: (BuildContext context, int index) => Container(
-                    margin: EdgeInsets.all(5),
-                    width: 200,
-                    height: 254,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => product(
-                                    name: 'burger',
-                                  )),
-                        );
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Image.asset(images[index]),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            ' Daylight Coffee',
-                            style: TextStyle(color: Colors.black, fontSize: 20),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            'Colarodo, San Francisco',
-                            style: TextStyle(
-                                color: Color.fromRGBO(134, 134, 134, 1),
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                  height: 20,
-                                  width: 36,
-                                  decoration: BoxDecoration(
-                                      color: Color.fromRGBO(252, 186, 24, 1),
-                                      borderRadius: BorderRadius.circular(6)),
-                                  child: Center(
-                                      child: Text(
-                                    '4.5',
-                                    style: TextStyle(color: Colors.white),
-                                  ))),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                '25min',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                '.',
-                                style: TextStyle(
-                                    color: Color.fromRGBO(
-                                      134,
-                                      134,
-                                      134,
-                                      1,
-                                    ),
-                                    fontSize: 10),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text('Free delivery'),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                height: 170,
-                width: 335,
-                child: Image.asset('images/Banner.png'),
-              ),
-              SizedBox(height: 15),
-              Container(
-                padding: EdgeInsets.only(right: 15),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Best Picks ',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20),
-                    ),
-                    Text(
-                      ' See all',
-                      style: TextStyle(
-                        color: Color.fromRGBO(252, 186, 24, 1),
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              Text(
-                ' Restaurants by team',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 230,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: images.length,
-                  itemBuilder: (BuildContext context, int index) => Container(
-                    margin: EdgeInsets.all(5),
-                    width: 200,
-                    height: 254,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Image.asset(images[index]),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          ' Daylight Coffee',
-                          style: TextStyle(color: Colors.black, fontSize: 20),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          'Colarodo, San Francisco',
-                          style: TextStyle(
-                              color: Color.fromRGBO(134, 134, 134, 1),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                                height: 20,
-                                width: 36,
-                                decoration: BoxDecoration(
-                                    color: Color.fromRGBO(252, 186, 24, 1),
-                                    borderRadius: BorderRadius.circular(6)),
-                                child: Center(
-                                    child: Text(
-                                  '4.5',
-                                  style: TextStyle(color: Colors.white),
-                                ))),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              '25min',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              '.',
-                              style: TextStyle(
-                                  color: Color.fromRGBO(
-                                    134,
-                                    134,
-                                    134,
-                                    1,
-                                  ),
-                                  fontSize: 10),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text('Free delivery'),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(right: 15),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'All Restaurants',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => see_all_resturent_screen()),
-                        );
-                      },
-                      child: Text(
-                        ' See all',
-                        style: TextStyle(
-                          color: Color.fromRGBO(252, 186, 24, 1),
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              FutureBuilder(
-                  future: menuprovider.menuitems(),
-                  builder: (context, AsyncSnapshot snapshot) => snapshot.hasData
-                      ? Center(
-                          child: ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: snapshot.data['data'].length,
-                              itemBuilder: (BuildContext context, int index) {
-                                var snap = snapshot.data['data'][index];
+           SizedBox(height: 20,),
 
-                                return Center(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => product(
-                                                  id: snap['id'],
-                                                  name: snap['name'],
-                                                  img:
-                                                      '${menuprovider.imageurl}${snap['logo_img']}',
-                                                )),
-                                      );
-                                    },
-                                    child: Container(
-                                      margin: EdgeInsets.all(15),
-                                      width: 335,
-                                      height: 282,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+              FutureBuilder(
+                future:  menuprovider.menuitems(  ),
+                builder: (c, AsyncSnapshot snapshot) {
+                  if (!snapshot.hasData)
+                    return Align(
+                        alignment: Alignment.center,
+                        child: Column(children: [
+                          // Text('Sorry,We are not there yet',style: TextStyle(fontSize: 20,color: Colors.black,),),
+                          // SizedBox(height: 10,),
+                          //  Image.asset('images/sad_emojie.png',height: 70,width: 70,),
+                          dashboardwidget().cicularbar()
+
+                        ],));
+
+                  if (snapshot.hasData) {
+                    return  Center(
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: snapshot.data['data'].length==null?null:snapshot.data['data'].length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return   Center(
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => product(
+                                          id: snapshot.data['data'][index]['id'],
+                                          name: snapshot.data['data'][index]['name'],
+                                          img: '${menuprovider.imageurl}${snapshot.data['data'][index]['logo_img']}',
+                                        )),
+                                  );
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(left: 15,right: 15),
+                                  width: 335,
+                                  height: 270,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius:
+                                        BorderRadius.circular(15.0),
+                                        child: Image.network(
+                                          '${menuprovider.imageurl}${snapshot.data['data'][index]['logo_img']}',
+                                          height: 200,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        '${snapshot.data['data'][index]['name']}',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 20),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+
+                                      Row(
                                         children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(15.0),
-                                            child: Image.network(
-                                              '${menuprovider.imageurl}${snap['logo_img']}',
-                                              height: 200,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
                                           Text(
-                                            '${snap['name']}',
+                                            '4.3 ',
                                             style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 20),
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                '\$\$',
-                                                style: TextStyle(
-                                                    color: Color.fromRGBO(
-                                                        134, 134, 134, 1),
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                              ),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
-                                              Text(
-                                                '.',
-                                                style: TextStyle(
-                                                    color: Color.fromRGBO(
-                                                        134, 134, 134, 1),
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                              ),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
-                                              Text(
-                                                'Chinese',
-                                                style: TextStyle(
-                                                    color: Color.fromRGBO(
-                                                        134, 134, 134, 1),
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                              ),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
-                                              Text(
-                                                '.',
-                                                style: TextStyle(
-                                                    color: Color.fromRGBO(
-                                                        134, 134, 134, 1),
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                              ),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
-                                              Text(
-                                                'American',
-                                                style: TextStyle(
-                                                    color: Color.fromRGBO(
-                                                        134, 134, 134, 1),
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                              ),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
-                                              Text(
-                                                '.',
-                                                style: TextStyle(
-                                                    color: Color.fromRGBO(
-                                                        134, 134, 134, 1),
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                              ),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
-                                              Text(
-                                                'Deshi food',
-                                                style: TextStyle(
-                                                    color: Color.fromRGBO(
-                                                        134, 134, 134, 1),
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                '4.3 ',
-                                                style: TextStyle(
-                                                    color: Color.fromRGBO(
-                                                        134, 134, 134, 1),
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                              ),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
-                                              Icon(
-                                                Icons.star,
-                                                size: 11,
-                                                color: Color.fromRGBO(
-                                                    252, 186, 24, 1),
-                                              ),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
-                                              Text(
-                                                '200+ Ratings',
-                                                style: TextStyle(
-                                                    color: Color.fromRGBO(
-                                                        134, 134, 134, 1),
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                              ),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
-                                              Icon(
-                                                Icons.access_alarm_rounded,
-                                                size: 11,
-                                              ),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
-                                              Text(
-                                                '25 Min',
-                                                style: TextStyle(
-                                                    color: Color.fromRGBO(
-                                                        134, 134, 134, 1),
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                              ),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
-                                              Icon(
-                                                Icons.person,
-                                                size: 11,
                                                 color: Color.fromRGBO(
                                                     134, 134, 134, 1),
-                                              ),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
-                                              Text(
-                                                'Free',
-                                                style: TextStyle(
-                                                    color: Color.fromRGBO(
-                                                        134, 134, 134, 1),
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                              ),
-                                            ],
-                                          )
+                                                fontSize: 14,
+                                                fontWeight:
+                                                FontWeight.w400),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Icon(
+                                            Icons.star,
+                                            size: 11,
+                                            color: Color.fromRGBO(
+                                                252, 186, 24, 1),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text(
+                                            '200+ Ratings',
+                                            style: TextStyle(
+                                                color: Color.fromRGBO(
+                                                    134, 134, 134, 1),
+                                                fontSize: 14,
+                                                fontWeight:
+                                                FontWeight.w400),
+                                          ),
+
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Icon(
+                                            Icons.person,
+                                            size: 11,
+                                            color: Color.fromRGBO(
+                                                134, 134, 134, 1),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text(
+                                            'Free',
+                                            style: TextStyle(
+                                                color: Color.fromRGBO(
+                                                    134, 134, 134, 1),
+                                                fontSize: 14,
+                                                fontWeight:
+                                                FontWeight.w400),
+                                          ),
                                         ],
-                                      ),
-                                    ),
+                                      )
+                                    ],
                                   ),
-                                );
-                              }),
-                        )
-                      : Center(
-                          child:
-                              Text('no resturent registred on this location'),
-                        )),
+                                ),
+                              ),
+                            );
+                          }),
+                    );
+
+                  }
+                  if (snapshot.hasError) print(snapshot.error.toString());
+                  return Align(
+                      alignment: Alignment.center,
+                      child: Image.asset('images/loader.gif'));
+                },
+              ),
+              // FutureBuilder(
+              //     future: menuprovider.menuitems(  ),
+              //     builder: (context, AsyncSnapshot snapshot)=>
+              //
+              //     snapshot.hasData
+              //         ?
+              //     Center(
+              //             child: ListView.builder(
+              //                 shrinkWrap: true,
+              //                 physics: NeverScrollableScrollPhysics(),
+              //                 itemCount: snapshot.data['data'].length??0,
+              //
+              //                 itemBuilder: (BuildContext context, int index) {
+              //                   var snap = snapshot.data['data'][index];
+              //
+              //
+              //                   return   Center(
+              //                     child: GestureDetector(
+              //                       onTap: () {
+              //                         Navigator.push(
+              //                           context,
+              //                           MaterialPageRoute(
+              //                               builder: (context) => product(
+              //                                     id: snap['id'],
+              //                                     name: snap['name'],
+              //                                     img: '${menuprovider.imageurl}${snap['logo_img']}',
+              //                                   )),
+              //                         );
+              //                       },
+              //                       child: Container(
+              //                         margin: EdgeInsets.all(15),
+              //                         width: 335,
+              //                         height: 282,
+              //                         child: Column(
+              //                           crossAxisAlignment:
+              //                               CrossAxisAlignment.start,
+              //                           mainAxisAlignment:
+              //                               MainAxisAlignment.center,
+              //                           children: [
+              //                             ClipRRect(
+              //                               borderRadius:
+              //                                   BorderRadius.circular(15.0),
+              //                               child: Image.network(
+              //                                 '${menuprovider.imageurl}${snap['logo_img']}',
+              //                                 height: 200,
+              //                               ),
+              //                             ),
+              //                             SizedBox(
+              //                               height: 10,
+              //                             ),
+              //                             Text(
+              //                               '${snap['name']}',
+              //                               style: TextStyle(
+              //                                   color: Colors.black,
+              //                                   fontSize: 20),
+              //                             ),
+              //                             SizedBox(
+              //                               height: 5,
+              //                             ),
+              //                             Row(
+              //                               children: [
+              //                                 Text(
+              //                                   '\$\$',
+              //                                   style: TextStyle(
+              //                                       color: Color.fromRGBO(
+              //                                           134, 134, 134, 1),
+              //                                       fontSize: 14,
+              //                                       fontWeight:
+              //                                           FontWeight.w400),
+              //                                 ),
+              //                                 SizedBox(
+              //                                   width: 5,
+              //                                 ),
+              //                                 Text(
+              //                                   '.',
+              //                                   style: TextStyle(
+              //                                       color: Color.fromRGBO(
+              //                                           134, 134, 134, 1),
+              //                                       fontSize: 14,
+              //                                       fontWeight:
+              //                                           FontWeight.w400),
+              //                                 ),
+              //                                 SizedBox(
+              //                                   width: 5,
+              //                                 ),
+              //                                 Text(
+              //                                   'Chinese',
+              //                                   style: TextStyle(
+              //                                       color: Color.fromRGBO(
+              //                                           134, 134, 134, 1),
+              //                                       fontSize: 14,
+              //                                       fontWeight:
+              //                                           FontWeight.w400),
+              //                                 ),
+              //                                 SizedBox(
+              //                                   width: 5,
+              //                                 ),
+              //                                 Text(
+              //                                   '.',
+              //                                   style: TextStyle(
+              //                                       color: Color.fromRGBO(
+              //                                           134, 134, 134, 1),
+              //                                       fontSize: 14,
+              //                                       fontWeight:
+              //                                           FontWeight.w400),
+              //                                 ),
+              //                                 SizedBox(
+              //                                   width: 5,
+              //                                 ),
+              //                                 Text(
+              //                                   'American',
+              //                                   style: TextStyle(
+              //                                       color: Color.fromRGBO(
+              //                                           134, 134, 134, 1),
+              //                                       fontSize: 14,
+              //                                       fontWeight:
+              //                                           FontWeight.w400),
+              //                                 ),
+              //                                 SizedBox(
+              //                                   width: 5,
+              //                                 ),
+              //                                 Text(
+              //                                   '.',
+              //                                   style: TextStyle(
+              //                                       color: Color.fromRGBO(
+              //                                           134, 134, 134, 1),
+              //                                       fontSize: 14,
+              //                                       fontWeight:
+              //                                           FontWeight.w400),
+              //                                 ),
+              //                                 SizedBox(
+              //                                   width: 5,
+              //                                 ),
+              //                                 Text(
+              //                                   'Deshi food',
+              //                                   style: TextStyle(
+              //                                       color: Color.fromRGBO(
+              //                                           134, 134, 134, 1),
+              //                                       fontSize: 14,
+              //                                       fontWeight:
+              //                                           FontWeight.w400),
+              //                                 ),
+              //                               ],
+              //                             ),
+              //                             SizedBox(
+              //                               height: 5,
+              //                             ),
+              //                             Row(
+              //                               children: [
+              //                                 Text(
+              //                                   '4.3 ',
+              //                                   style: TextStyle(
+              //                                       color: Color.fromRGBO(
+              //                                           134, 134, 134, 1),
+              //                                       fontSize: 14,
+              //                                       fontWeight:
+              //                                           FontWeight.w400),
+              //                                 ),
+              //                                 SizedBox(
+              //                                   width: 5,
+              //                                 ),
+              //                                 Icon(
+              //                                   Icons.star,
+              //                                   size: 11,
+              //                                   color: Color.fromRGBO(
+              //                                       252, 186, 24, 1),
+              //                                 ),
+              //                                 SizedBox(
+              //                                   width: 5,
+              //                                 ),
+              //                                 Text(
+              //                                   '200+ Ratings',
+              //                                   style: TextStyle(
+              //                                       color: Color.fromRGBO(
+              //                                           134, 134, 134, 1),
+              //                                       fontSize: 14,
+              //                                       fontWeight:
+              //                                           FontWeight.w400),
+              //                                 ),
+              //                                 SizedBox(
+              //                                   width: 5,
+              //                                 ),
+              //                                 Icon(
+              //                                   Icons.access_alarm_rounded,
+              //                                   size: 11,
+              //                                 ),
+              //                                 SizedBox(
+              //                                   width: 5,
+              //                                 ),
+              //                                 Text(
+              //                                   '25 Min',
+              //                                   style: TextStyle(
+              //                                       color: Color.fromRGBO(
+              //                                           134, 134, 134, 1),
+              //                                       fontSize: 14,
+              //                                       fontWeight:
+              //                                           FontWeight.w400),
+              //                                 ),
+              //                                 SizedBox(
+              //                                   width: 5,
+              //                                 ),
+              //                                 Icon(
+              //                                   Icons.person,
+              //                                   size: 11,
+              //                                   color: Color.fromRGBO(
+              //                                       134, 134, 134, 1),
+              //                                 ),
+              //                                 SizedBox(
+              //                                   width: 5,
+              //                                 ),
+              //                                 Text(
+              //                                   'Free',
+              //                                   style: TextStyle(
+              //                                       color: Color.fromRGBO(
+              //                                           134, 134, 134, 1),
+              //                                       fontSize: 14,
+              //                                       fontWeight:
+              //                                           FontWeight.w400),
+              //                                 ),
+              //                               ],
+              //                             )
+              //                           ],
+              //                         ),
+              //                       ),
+              //                     ),
+              //                   );
+              //                 }),
+              //           )
+              //         : Center(child: Text('no resturent registred on this location'),)),
             ],
           ),
         ),
