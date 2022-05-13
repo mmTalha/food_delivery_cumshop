@@ -23,7 +23,8 @@ class order_complete_screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deliveryaddress = Provider.of<api_calls>(context);
-    final passed_data = InheritedDataProvider.of(context)!.data;
+
+
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -195,7 +196,7 @@ class order_complete_screen extends StatelessWidget {
                                 fontWeight: FontWeight.w400),
                           ),
                           Text(
-                            '${passed_data}',
+                            '${deliveryaddress.locate}',
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,

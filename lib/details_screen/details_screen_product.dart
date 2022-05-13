@@ -3,6 +3,8 @@ import 'package:food_app/checkout_screens/checkout_order_screen.dart';
 import 'package:food_app/provider/api_calls.dart';
 import 'package:food_app/provider/cartprovider.dart';
 import 'package:food_app/signin_register_screens/find_resturent_near_you.dart';
+import 'package:food_app/widgets/dashboard_widget.dart';
+import 'package:food_app/widgets/snack_bar.dart';
 import 'package:provider/provider.dart';
 
 class details_screen_products extends StatefulWidget {
@@ -209,7 +211,6 @@ class _details_screen_productsState extends State<details_screen_products> {
                                           variantid = snap.data['productDetail'][0]['variant'][i]['id'];
                                           price = snap.data['productDetail'][0]['price'];
                                           quantity = _n;
-
                                         });
                                         print(
                                             '${snap.data['productDetail'][0]['variant'][i]['id']}');
@@ -290,44 +291,16 @@ class _details_screen_productsState extends State<details_screen_products> {
                             ),
                             animationDuration: Duration(seconds: 1),
                             onPressed: () {
-                             print(price);
-                              provider.cartbadge();
-                              varient.add_to_cart(23, 1, 5, 1023, 3);
-                              // varient.add_to_cart(productid,resturentid,variantid,price,_n);
-                              // final snackBar = SnackBar(
-                              //     elevation: 6.0,
-                              //     backgroundColor:
-                              //         Color.fromRGBO(252, 186, 24, 1),
-                              //     behavior: SnackBarBehavior.floating,
-                              //     content: Row(
-                              //       crossAxisAlignment:
-                              //           CrossAxisAlignment.start,
-                              //       mainAxisAlignment:
-                              //           MainAxisAlignment.spaceBetween,
-                              //       children: [
-                              //         Container(
-                              //             height: 20,
-                              //             width: 20,
-                              //             decoration: BoxDecoration(
-                              //                 border: Border.all(
-                              //                     color: Colors.white),
-                              //                 borderRadius: BorderRadius.all(
-                              //                     Radius.circular(20))),
-                              //             child: Center(child: Text('2'))),
-                              //         GestureDetector(
-                              //             onTap: () {
-                              //               Navigator.push(
-                              //                   context,
-                              //                   MaterialPageRoute(
-                              //                       builder: (BuildContext
-                              //                               context) =>
-                              //                           checkout_order_screens()));
-                              //             },
-                              //             child: Text('View cart')),
-                              //         Text('RS:25676'),
-                              //       ],
-                              //     ));
-                              // _scaffoldKey.currentState!.showSnackBar(snackBar);
+
+                             if(productid.toString().isNotEmpty&&widget.resturentid.toString().isNotEmpty&&variantid.toString().isNotEmpty&&price.toString().isNotEmpty) {
+                               // varient.add_to_cart(23, 1, 5, 1023, 3);
+                               varient.add_to_cart(
+                                   productid, widget.resturentid, variantid, price,
+                                   _n);
+                               snackbar().snack(context, checkout_order_screens(),'Checkout', _scaffoldKey);
+                             }{
+                               return ;
+                             }
                             })),
                   ),
                   SizedBox(
@@ -343,7 +316,7 @@ class _details_screen_productsState extends State<details_screen_products> {
           if (snap.hasError) print(snap.error.toString());
           return Align(
               alignment: Alignment.bottomCenter,
-              child: Image.asset('images/loader.gif'));
+              child: dashboardwidget().cicularbar());
         },
       )),
     );

@@ -30,14 +30,16 @@ class checkout_order_screens extends StatelessWidget {
         elevation: 0.0,
       ),
       body: SingleChildScrollView(
-        child:
-        FutureBuilder(
+        child: FutureBuilder(
           future: cart.get_cart(),
           builder: (c, AsyncSnapshot snap) {
+            if (snap.connectionState == ConnectionState.waiting)
+              return Center(child: dashboardwidget().cicularbar());
+
             if (!snap.hasData)
               return Align(
                   alignment: Alignment.center,
-                  child: Image.asset('images/loader.gif'));
+                  child: Text('cart is empty'));
             if (snap.hasData) {
               return SafeArea(
                 child: Container(
@@ -51,10 +53,13 @@ class checkout_order_screens extends StatelessWidget {
                           shrinkWrap: true,
                           itemCount: snap.data['AllcartSRecords'].length,
                           itemBuilder: (ctx, index) {
-                          print(snap.data['AllcartSRecords'][index]['variant_id']);
-                           resturentid = snap.data['AllcartSRecords'][index]['restaurant_id'];
+                            print(snap.data['AllcartSRecords'][index]
+                                ['variant_id']);
+                            resturentid = snap.data['AllcartSRecords'][index]
+                                ['restaurant_id'];
                             id = snap.data['AllcartSRecords'][index]['id'];
-                            userid = snap.data['AllcartSRecords'][index]['user_id'];
+                            userid =
+                                snap.data['AllcartSRecords'][index]['user_id'];
                             var price = snap.data['AllcartSRecords'][index]
                                     ['price'] *
                                 snap.data['AllcartSRecords'][index]['quantity'];
@@ -92,9 +97,8 @@ class checkout_order_screens extends StatelessWidget {
                                                         BorderRadius.circular(
                                                             5)),
                                                 child: Center(
-                                                    child:
-                                                Text(
-                                                  '${index+1}',
+                                                    child: Text(
+                                                  '${index + 1}',
                                                   style: TextStyle(
                                                       color: Color.fromRGBO(
                                                           252, 186, 24, 1),
@@ -128,14 +132,16 @@ class checkout_order_screens extends StatelessWidget {
                                                       ),
                                                     ),
                                                   ),
-
                                                   Row(
                                                     children: [
                                                       IconButton(
                                                           onPressed: () {
-                                                           selectedIndex = index;
-                                                            cart.isdelete = true;
-                                                            print(cart.cartvalue);
+                                                            selectedIndex =
+                                                                index;
+                                                            cart.isdelete =
+                                                                true;
+                                                            print(
+                                                                cart.cartvalue);
                                                             quantity == 1
                                                                 ? null
                                                                 : cart
@@ -143,20 +149,25 @@ class checkout_order_screens extends StatelessWidget {
                                                                         cartid,
                                                                         remove);
                                                             print('remove');
-
                                                           },
-                                                          icon:  cart.isdelete?dashboardwidget().cicularbar()
-                                                              : Icon(
-                                                              Icons.remove)),
-                                                      cart.cartvalue?dashboardwidget().cicularbar()
-                                                          :Text(
-                                                          '${snap.data['AllcartSRecords'][index]['quantity']}'),
+                                                          icon: cart.isdelete
+                                                              ? dashboardwidget()
+                                                                  .cicularbar()
+                                                              : Icon(Icons
+                                                                  .remove)),
+                                                      cart.cartvalue
+                                                          ? dashboardwidget()
+                                                              .cicularbar()
+                                                          : Text(
+                                                              '${snap.data['AllcartSRecords'][index]['quantity']}'),
                                                       IconButton(
                                                           onPressed: () {
-                                                            cart.cartvalue = true;
+                                                            cart.cartvalue =
+                                                                true;
                                                             cart.update_cart(
                                                                 cartid, 1);
-                                                            cart.cartvalue = false;
+                                                            cart.cartvalue =
+                                                                false;
                                                             print('add');
                                                           },
                                                           icon:
@@ -166,14 +177,15 @@ class checkout_order_screens extends StatelessWidget {
                                                               provider, child) {
                                                         return IconButton(
                                                             onPressed: () {
-                                                              cart.cartvalue = true;
+                                                              cart.cartvalue =
+                                                                  true;
                                                               print(id);
                                                               provider
                                                                   .delete_cart(
                                                                       id);
-                                                              cart.cartvalue = false;
+                                                              cart.cartvalue =
+                                                                  false;
                                                             },
-
                                                             icon: Icon(
                                                               Icons.delete,
                                                               color: Colors.red,
@@ -194,7 +206,7 @@ class checkout_order_screens extends StatelessWidget {
                                     ],
                                   ),
                                   Text(
-                                    '\$'+'${price.toString()}',
+                                    '\$' + '${price.toString()}',
                                     style: TextStyle(
                                         color: Color.fromRGBO(252, 186, 24, 1),
                                         fontSize: 16),
@@ -218,7 +230,7 @@ class checkout_order_screens extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Total (incl. VAT) '),
+                          Text('Total (incl. VAT)'),
                           Text('\$${snap.data['total']}'),
                         ],
                       ),
@@ -246,14 +258,14 @@ class checkout_order_screens extends StatelessWidget {
                                     MaterialPageRoute(
                                       builder: (BuildContext context) =>
                                           StepperDemo(
-                                            id: id,
-                                            paymentmethod: 'cod',
-                                            resturent_id: resturentid,
-                                            subtotal:{snap.data['total']},
-                                            total_price:snap.data['sub_total'] ,
-                                            userid: userid,
-                                            vat_value:snap.data['Vat'] ,
-                                          ),
+                                        id: id,
+                                        paymentmethod: 'cod',
+                                        resturent_id: resturentid,
+                                        subtotal: {snap.data['total']},
+                                        total_price: snap.data['sub_total'],
+                                        userid: userid,
+                                        vat_value: snap.data['Vat'],
+                                      ),
                                       //     add_your_payment_screen()
                                     ),
                                   );

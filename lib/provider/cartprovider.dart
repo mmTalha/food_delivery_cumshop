@@ -13,6 +13,7 @@ class cartprovider with  ChangeNotifier {
   bool isloading=false;
   bool animation = false;
   bool iscart = false;
+  String locate = '';
   var address;
    void cartbadge(){
      cartvalue ++;
@@ -51,12 +52,11 @@ class cartprovider with  ChangeNotifier {
     Address =
     '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
     print(Address);
-    locate = '${place.subLocality}';
-    print(locate);
+
   }
 
   String Address = 'search';
-  String locate = '';
+
   Future currentlocation(BuildContext context)async{
     Position position = await _getGeoLocationPosition();
     final _prefs = SharedPreferences.getInstance();
@@ -76,6 +76,7 @@ class cartprovider with  ChangeNotifier {
     '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
     print('latest address ${place.street}');
     if(latitude.toString().isNotEmpty&&latitude.toString().isNotEmpty){
+      locate = '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
       return Navigator.push(
         context,
         MaterialPageRoute(

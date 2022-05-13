@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_app/models/order_details_.dart';
 import 'package:food_app/provider/cartprovider.dart';
 import 'package:food_app/services/orderdetails_api.dart';
+import 'package:food_app/widgets/dashboard_widget.dart';
 import 'package:provider/provider.dart';
 
 class orders extends StatelessWidget {
@@ -61,7 +62,7 @@ class orders extends StatelessWidget {
                 if (!snap.hasData)
                   return Align(
                       alignment: Alignment.center,
-                      child: Image.asset('images/loader.gif'));
+                      child: dashboardwidget().cicularbar());
                 if (snap.hasData)
                   return
                     Expanded(
@@ -109,12 +110,12 @@ class orders extends StatelessWidget {
 
                                           fontSize: 15),),
                                       SizedBox(width: 5,),
-                                      Text( 'Chinese', style: TextStyle(
+                                      Text('Chinese', style: TextStyle(
                                           color: Color.fromRGBO(1, 15, 7, 1),
 
                                           fontSize: 15),),
                                       SizedBox(width: 95,),
-                                      Text(  '\$${snap.data!.orders![index].totalPrice }', style: TextStyle(
+                                      Text( '\$${snap.data!.orders![index].totalPrice }', style: TextStyle(
                                           color: Color.fromRGBO(252, 186, 24, 1),
 
                                           fontSize: 15),),
@@ -131,7 +132,7 @@ class orders extends StatelessWidget {
                 if (snap.hasError) print(snap.error.toString());
                 return Align(
                     alignment: Alignment.center,
-                    child: Image.asset('images/loader.gif'));
+                    child: dashboardwidget().cicularbar());
               },
 
 

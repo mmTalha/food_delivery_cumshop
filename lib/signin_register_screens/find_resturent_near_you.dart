@@ -176,6 +176,8 @@ class find_resturent extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
+                      if(address.text.isNotEmpty){
+                       locationservices_provider.locate= address.text;
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -183,7 +185,9 @@ class find_resturent extends StatelessWidget {
                                   child: tabbar(),
                                   data: address.text,
                                 )),
-                      );
+                      );}else{
+                        return ;
+                      }
                     })),
           ),
         ],
