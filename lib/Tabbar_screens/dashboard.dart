@@ -137,10 +137,8 @@ class _dashboard_screenState extends State<dashboard_screen> {
                       badgeColor: Color.fromRGBO(252, 186, 24, 1),
                       animationType: BadgeAnimationType.slide,
                       badgeContent: Text('${badge.cartvalue}'),
-                      child: Image.asset(
-                        'images/carticon.png',
-                        color: Color.fromRGBO(252, 186, 24, 1),
-                      ))),
+                      child: Image.asset('images/carticon.png',
+                          color: Colors.black))),
             ),
           )
         ],
@@ -201,21 +199,10 @@ class _dashboard_screenState extends State<dashboard_screen> {
                         alignment: Alignment.center,
                         child: Column(
                           children: [
-                            Text(
-                              'Sorry,We are not there yet',
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.black,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Image.asset(
-                              'images/sad_emojie.png',
-                              height: 70,
-                              width: 70,
-                            ),
+                            // Text('Sorry,We are not there yet',style: TextStyle(fontSize: 20,color: Colors.black,),),
+                            // SizedBox(height: 10,),
+                            //  Image.asset('images/sad_emojie.png',height: 70,width: 70,),
+                            dashboardwidget().cicularbar()
                           ],
                         ));
 

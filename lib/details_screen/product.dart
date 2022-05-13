@@ -25,7 +25,6 @@ class _productState extends State<product> with TickerProviderStateMixin {
     final detailsmenu = Provider.of<api_calls>(context);
     var imgurl =
         'https://dnpprojects.com/demo/comshop/public/storage/restaurant/menu/';
-
     return Scaffold(
       body: Column(
         children: [
@@ -39,8 +38,8 @@ class _productState extends State<product> with TickerProviderStateMixin {
                   ),
                   fit: BoxFit.cover),
               borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(80),
-                  bottomRight: Radius.circular(80)),
+                  bottomLeft: Radius.circular(50),
+                  bottomRight: Radius.circular(50)),
               color: Colors.red,
               shape: BoxShape.rectangle,
             ),
@@ -78,10 +77,8 @@ class _productState extends State<product> with TickerProviderStateMixin {
                             badgeColor: Color.fromRGBO(252, 186, 24, 1),
                             animationType: BadgeAnimationType.slide,
                             badgeContent: Text('${badge.cartvalue}'),
-                            child: Image.asset(
-                              'images/carticon.png',
-                              color: Color.fromRGBO(252, 186, 24, 1),
-                            )),
+                            child: Image.asset('images/carticon.png',
+                                color: Colors.black)),
                       )),
                 ],
               ),

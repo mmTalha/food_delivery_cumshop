@@ -15,7 +15,7 @@ class checkout_order_screens extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    int? selectedIndex;
     var remove = 0;
     var id;
     double subtotal = 0;
@@ -51,7 +51,7 @@ class checkout_order_screens extends StatelessWidget {
                           shrinkWrap: true,
                           itemCount: snap.data['AllcartSRecords'].length,
                           itemBuilder: (ctx, index) {
-
+                          print(snap.data['AllcartSRecords'][index]['variant_id']);
                            resturentid = snap.data['AllcartSRecords'][index]['restaurant_id'];
                             id = snap.data['AllcartSRecords'][index]['id'];
                             userid = snap.data['AllcartSRecords'][index]['user_id'];
@@ -133,6 +133,7 @@ class checkout_order_screens extends StatelessWidget {
                                                     children: [
                                                       IconButton(
                                                           onPressed: () {
+                                                           selectedIndex = index;
                                                             cart.isdelete = true;
                                                             print(cart.cartvalue);
                                                             quantity == 1
@@ -144,7 +145,7 @@ class checkout_order_screens extends StatelessWidget {
                                                             print('remove');
 
                                                           },
-                                                          icon: cart.isdelete?dashboardwidget().cicularbar()
+                                                          icon:  cart.isdelete?dashboardwidget().cicularbar()
                                                               : Icon(
                                                               Icons.remove)),
                                                       cart.cartvalue?dashboardwidget().cicularbar()
@@ -155,6 +156,7 @@ class checkout_order_screens extends StatelessWidget {
                                                             cart.cartvalue = true;
                                                             cart.update_cart(
                                                                 cartid, 1);
+                                                            cart.cartvalue = false;
                                                             print('add');
                                                           },
                                                           icon:
@@ -169,7 +171,9 @@ class checkout_order_screens extends StatelessWidget {
                                                               provider
                                                                   .delete_cart(
                                                                       id);
+                                                              cart.cartvalue = false;
                                                             },
+
                                                             icon: Icon(
                                                               Icons.delete,
                                                               color: Colors.red,

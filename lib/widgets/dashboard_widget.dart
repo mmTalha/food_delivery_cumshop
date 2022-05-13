@@ -5,11 +5,10 @@ import 'package:food_app/details_screen/details_screen_product.dart';
 import 'package:food_app/details_screen/product.dart';
 import 'package:food_app/see_all_screens/see_all_resturent_screen.dart';
 
-class dashboardwidget{
-  fyp  (BuildContext context){
-    return   Column(
+class dashboardwidget {
+  fyp(BuildContext context) {
+    return Column(
       children: [
-
         Container(
           height: 170,
           width: 335,
@@ -45,9 +44,7 @@ class dashboardwidget{
         Text(
           ' Restaurants by team',
           style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 20),
+              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
         ),
         SizedBox(
           height: 20,
@@ -97,9 +94,9 @@ class dashboardwidget{
                               borderRadius: BorderRadius.circular(6)),
                           child: Center(
                               child: Text(
-                                '4.5',
-                                style: TextStyle(color: Colors.white),
-                              ))),
+                            '4.5',
+                            style: TextStyle(color: Colors.white),
+                          ))),
                       SizedBox(
                         width: 10,
                       ),
@@ -170,7 +167,8 @@ class dashboardwidget{
       ],
     );
   }
-  productcard(BuildContext context,img,title){
+
+  productcard(BuildContext context, img, title) {
     return Column(
       children: [
         Container(
@@ -208,9 +206,9 @@ class dashboardwidget{
                               borderRadius: BorderRadius.circular(6)),
                           child: Center(
                               child: Text(
-                                '4.5',
-                                style: TextStyle(color: Colors.white),
-                              ))),
+                            '4.5',
+                            style: TextStyle(color: Colors.white),
+                          ))),
                       SizedBox(
                         width: 10,
                       ),
@@ -281,11 +279,15 @@ class dashboardwidget{
       ],
     );
   }
- Widget  cicularbar(){
+
+  Widget cicularbar() {
     return SizedBox(
         height: 16,
         width: 16,
-        child: CircularProgressIndicator
-          (color:Color.fromRGBO(252, 186, 24, 1),backgroundColor: Colors.white,strokeWidth: 3,));
+        child: CircularProgressIndicator(
+          color: Color.fromRGBO(252, 186, 24, 1),
+          backgroundColor: Colors.white,
+          strokeWidth: 3,
+        ));
   }
 }

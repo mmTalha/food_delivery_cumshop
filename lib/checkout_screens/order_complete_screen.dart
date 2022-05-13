@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/checkout_screens/thankyou_screen.dart';
 import 'package:food_app/provider/api_calls.dart';
+import 'package:food_app/widgets/inherited_widget.dart';
 import 'package:provider/provider.dart';
 
 class order_complete_screen extends StatelessWidget {
@@ -22,6 +23,7 @@ class order_complete_screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deliveryaddress = Provider.of<api_calls>(context);
+    final passed_data = InheritedDataProvider.of(context)!.data;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -193,7 +195,7 @@ class order_complete_screen extends StatelessWidget {
                                 fontWeight: FontWeight.w400),
                           ),
                           Text(
-                            'Shani General Karachi',
+                            '${passed_data}',
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,

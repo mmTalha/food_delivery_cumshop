@@ -143,45 +143,6 @@ class Profile extends StatelessWidget {
               Container(
                 child: ListTile(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              add_social_account_screen()),
-                    );
-                  },
-                  leading: Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Icon(
-                      Icons.facebook,
-                      size: 20,
-                      color: Colors.blue,
-                    ),
-                  ),
-                  subtitle: Text(
-                    'Add Facebook, Twitter etc ',
-                    style: TextStyle(
-                        color: Color.fromRGBO(134, 134, 134, 1),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400),
-                  ),
-                  title: Text(
-                    'Add Social Account',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16,
-                    ),
-                  ),
-                  trailing: Icon(Icons.arrow_forward_ios_outlined),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                child: ListTile(
-                  onTap: () {
                     Widget cancelButton = TextButton(
                       child: Text(
                         "Cancel",

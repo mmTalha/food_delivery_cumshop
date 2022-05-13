@@ -17,7 +17,14 @@ class StepperDemo extends StatefulWidget {
   final paymentmethod;
 
   const StepperDemo(
-      {Key? key, this.id, this.userid, this.resturent_id, this.subtotal, this.vat_value, this.total_price, this.paymentmethod})
+      {Key? key,
+      this.id,
+      this.userid,
+      this.resturent_id,
+      this.subtotal,
+      this.vat_value,
+      this.total_price,
+      this.paymentmethod})
       : super(key: key);
 
   @override
@@ -35,6 +42,8 @@ class _StepperDemoState extends State<StepperDemo> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
         automaticallyImplyLeading: false,
         title: Text(
           'Checkout',
@@ -43,10 +52,7 @@ class _StepperDemoState extends State<StepperDemo> {
         centerTitle: true,
       ),
       body: Container(
-        height: MediaQuery
-            .of(context)
-            .size
-            .height,
+        height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
             Expanded(
@@ -75,11 +81,12 @@ class _StepperDemoState extends State<StepperDemo> {
                     Step(
                       title: new Text('Order'),
                       content: Container(
-                          height: 480, child: order_complete_screen(
-                         editingcontroller: text,
-                        orderid: widget.id,
-                        totalincvat: widget.total_price,
-                      )),
+                          height: 480,
+                          child: order_complete_screen(
+                            editingcontroller: text,
+                            orderid: widget.id,
+                            totalincvat: widget.total_price,
+                          )),
                       isActive: _currentStep >= 0,
                       state: _currentStep >= 1
                           ? StepState.complete
@@ -101,43 +108,42 @@ class _StepperDemoState extends State<StepperDemo> {
               child: _currentStep >= 2
                   ? null
                   : Container(
-                  height: 50,
-                  width: 290,
-                  child: MaterialButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      color: Color.fromRGBO(252, 186, 24, 1),
-                      child: Text(
-                        _currentStep >= 1 ? 'Confirm order' : 'Continued',
-                        style: TextStyle(
-                          fontFamily: 'Roboto',
-                          color: Colors.white,
-                        ),
-                      ),
-                      onPressed: () {
-                        continued();
-                        if(_currentStep ==2){
-                          print(text.text);
-                          checkout.checkout_screen(
-                              widget.vat_value,
-                              'cod',
-                              widget.subtotal,
-                              widget.vat_value,
-                              widget.total_price,
-                              'cod',
-                              widget.resturent_id,
-                              text.text);
-                        }
+                      height: 50,
+                      width: 290,
+                      child: MaterialButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          color: Color.fromRGBO(252, 186, 24, 1),
+                          child: Text(
+                            _currentStep >= 1 ? 'Confirm order' : 'Continued',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              color: Colors.white,
+                            ),
+                          ),
+                          onPressed: () {
+                            continued();
+                            if (_currentStep == 2) {
+                              print(text.text);
+                              checkout.checkout_screen(
+                                  widget.vat_value,
+                                  'cod',
+                                  widget.subtotal,
+                                  widget.vat_value,
+                                  widget.total_price,
+                                  'cod',
+                                  widget.resturent_id,
+                                  text.text);
+                            }
 
-
-                        // Navigator.push (
-                        //   context,
-                        //   MaterialPageRoute(
-                        //       builder: (BuildContext context) =>
-                        //           order_complete_screen()),
-                        //
-                        // );
-                      })),
+                            // Navigator.push (
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (BuildContext context) =>
+                            //           order_complete_screen()),
+                            //
+                            // );
+                          })),
             ),
           ],
         ),

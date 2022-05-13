@@ -21,8 +21,7 @@ class thankyou_screen extends StatelessWidget {
       //   ),
       // ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
               child: Text(
@@ -44,14 +43,15 @@ class thankyou_screen extends StatelessWidget {
           ),
           Center(child: Image.asset('images/rider.png')),
           SizedBox(
-            height: 5,
+            height: 18,
           ),
           Center(
             child: Text(
-              'KFC North karachi will be delivering\nyour order',
+              'KFC North karachi will be delivering\nyour order...',
+              textAlign: TextAlign.center,
               style: TextStyle(
                   color: Colors.black,
-                  fontSize: 15,
+                  fontSize: 14,
                   fontWeight: FontWeight.w400),
             ),
           ),
