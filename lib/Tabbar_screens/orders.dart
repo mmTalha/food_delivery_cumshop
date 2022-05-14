@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_app/models/order_details_.dart';
 import 'package:food_app/provider/cartprovider.dart';
 import 'package:food_app/services/orderdetails_api.dart';
+import 'package:food_app/widgets/dashboard_widget.dart';
 import 'package:provider/provider.dart';
 
 class orders extends StatelessWidget {
@@ -53,7 +54,7 @@ class orders extends StatelessWidget {
                 if (!snap.hasData)
                   return Align(
                       alignment: Alignment.center,
-                      child: Image.asset('images/loader.gif'));
+                      child: dashboardwidget().cicularbar());
                 if (snap.hasData)
                   return Expanded(
                     child: ListView.builder(
@@ -144,7 +145,7 @@ class orders extends StatelessWidget {
                 if (snap.hasError) print(snap.error.toString());
                 return Align(
                     alignment: Alignment.center,
-                    child: Image.asset('images/loader.gif'));
+                    child: dashboardwidget().cicularbar());
               },
             )
           ],

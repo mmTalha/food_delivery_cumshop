@@ -23,7 +23,6 @@ class order_complete_screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deliveryaddress = Provider.of<api_calls>(context);
-    final passed_data = InheritedDataProvider.of(context)!.data;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -120,9 +119,9 @@ class order_complete_screen extends StatelessWidget {
               elevation: 1,
               child: Center(
                 child: Container(
-                  padding: EdgeInsets.all(10),
+                  //  padding: EdgeInsets.all(10),
                   height: 200,
-                  width: 350,
+                  width: 360,
                   decoration: new BoxDecoration(
                       color: Color.fromRGBO(247, 247, 247, 1),
                       borderRadius: BorderRadius.circular(10)),
@@ -140,44 +139,49 @@ class order_complete_screen extends StatelessWidget {
                       ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             'Your order number:',
                             textAlign: TextAlign.start,
                             style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 15,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w400),
+                          ),
+                          SizedBox(
+                            width: 8,
                           ),
                           Text(
                             '$orderid',
                             textAlign: TextAlign.start,
                             style: TextStyle(
                                 color: Color.fromRGBO(0, 148, 255, 1),
-                                fontSize: 15,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w400),
                           ),
                         ],
                       ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             'Your order from:',
                             textAlign: TextAlign.start,
                             style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 15,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w400),
+                          ),
+                          SizedBox(
+                            width: 8,
                           ),
                           Text(
                             'KFC- North Karachi',
                             textAlign: TextAlign.start,
                             style: TextStyle(
                                 color: Color.fromRGBO(231, 164, 0, 1),
-                                fontSize: 15,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w400),
                           ),
                         ],
@@ -186,40 +190,53 @@ class order_complete_screen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'Delivery address:',
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400),
+                          SizedBox(
+                            //  height: 100,
+                            //     width: 100,
+                            child: Text(
+                              'Delivery address:',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400),
+                            ),
                           ),
-                          Text(
-                            '${passed_data}',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          SizedBox(
+                            height: 35,
+                            width: 190,
+                            child: Text(
+                              '${deliveryaddress.locate}',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400),
+                            ),
                           ),
                         ],
                       ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             'Total (incl.vat)',
                             textAlign: TextAlign.start,
                             style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 15,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w400),
+                          ),
+                          SizedBox(
+                            width: 8,
                           ),
                           Text(
                             '\$$totalincvat',
                             style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 15,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w400),
                           ),
                         ],
@@ -232,7 +249,6 @@ class order_complete_screen extends StatelessWidget {
           ],
         ),
       ),
-
     );
   }
 }

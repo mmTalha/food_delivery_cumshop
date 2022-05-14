@@ -58,9 +58,10 @@ class _StepperDemoState extends State<StepperDemo> {
             Expanded(
               child: Theme(
                 data: ThemeData(
-                    accentColor: Colors.orange,
-                    primarySwatch: Colors.orange,
-                    colorScheme: ColorScheme.light(primary: Colors.orange)),
+                    accentColor: Color.fromRGBO(252, 186, 24, 1),
+                    //    primarySwatch: Color.fromRGBO(252, 186, 24, 1),
+                    colorScheme: ColorScheme.light(
+                        primary: Color.fromRGBO(252, 186, 24, 1))),
                 child: Stepper(
                   physics: ScrollPhysics(),
                   type: stepperType,

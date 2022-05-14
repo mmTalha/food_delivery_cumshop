@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:food_app/Tabbar_screens/dashboard.dart';
 import 'package:food_app/Tabbar_screens/orders.dart';
 import 'package:food_app/Tabbar_screens/profile.dart';
-import 'package:food_app/Tabbar_screens/search_screen.dart';
 import 'package:food_app/categories/categories.dart';
 import 'package:food_app/provider/cartprovider.dart';
 import 'package:provider/provider.dart';
@@ -10,18 +9,16 @@ import 'package:provider/provider.dart';
 class tabbar extends StatefulWidget {
   final latitude;
   final longtitude;
-   final address;
+  final address;
 
-   tabbar({Key? key, this.latitude, this.longtitude, this.address})
+  tabbar({Key? key, this.latitude, this.longtitude, this.address})
       : super(key: key);
 
   @override
   _tabbarState createState() => _tabbarState();
 }
 
-
 class _tabbarState extends State<tabbar> {
-
   late String address = widget.address;
   int _currentIndex = 0;
   final List<Widget> _children = [
@@ -54,9 +51,6 @@ class _tabbarState extends State<tabbar> {
             icon: Icon(Icons.home),
             label: 'Home',
           ),
-          // BottomNavigationBarItem(
-          //     icon: new Icon(Icons.home),
-          //     title: new Text("DemoHome")
           // ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
