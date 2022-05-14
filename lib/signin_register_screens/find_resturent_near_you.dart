@@ -189,7 +189,7 @@ class find_resturent extends StatelessWidget {
                         return ;
                       }
                     })),
-          ),
+          )
         ],
       ),
     );

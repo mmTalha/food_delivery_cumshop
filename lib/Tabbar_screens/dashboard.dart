@@ -192,14 +192,17 @@ class _dashboard_screenState extends State<dashboard_screen> {
               FutureBuilder(
                 future:  menuprovider.menuitems(  ),
                 builder: (c, AsyncSnapshot snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting)
+                    return Center(child: dashboardwidget().cicularbar());
                   if (!snapshot.hasData)
+
                     return Align(
                         alignment: Alignment.center,
                         child: Column(children: [
-                          // Text('Sorry,We are not there yet',style: TextStyle(fontSize: 20,color: Colors.black,),),
-                          // SizedBox(height: 10,),
-                          //  Image.asset('images/sad_emojie.png',height: 70,width: 70,),
-                          dashboardwidget().cicularbar()
+                          Text('Sorry,We are not there yet',style: TextStyle(fontSize: 20,color: Colors.black,),),
+                          SizedBox(height: 10,),
+                           Image.asset('images/sad_emojie.png',height: 70,width: 70,),
+
 
                         ],));
 
@@ -208,7 +211,7 @@ class _dashboard_screenState extends State<dashboard_screen> {
                       child: ListView.builder(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
-                          itemCount: snapshot.data['data'].length==null?null:snapshot.data['data'].length,
+                          itemCount: snapshot.data['data'],
                           itemBuilder: (BuildContext context, int index) {
                             return   Center(
                               child: GestureDetector(

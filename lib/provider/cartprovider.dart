@@ -88,7 +88,7 @@ class cartprovider with  ChangeNotifier {
 
     }
     else{
-      CircularProgressIndicator();
+      Center(child: CircularProgressIndicator());
     }
 
   }

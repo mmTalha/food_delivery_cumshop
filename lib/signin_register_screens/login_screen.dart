@@ -20,14 +20,22 @@ class login_screen extends StatefulWidget {
 
 class _login_screenState extends State<login_screen> {
   @override
+
   @override
+
   Widget build(BuildContext context) {
+
     bool _isObscure = true;
 
     final TextEditingController email = TextEditingController();
     final TextEditingController password = TextEditingController();
     final provider = Provider.of<api_calls>(context, listen: true);
-
+    void dispose() {
+      email.dispose();
+      password.dispose();
+      // TODO: implement dispose
+      super.dispose();
+    }
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,

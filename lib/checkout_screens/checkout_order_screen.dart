@@ -38,8 +38,7 @@ class checkout_order_screens extends StatelessWidget {
 
             if (!snap.hasData)
               return Align(
-                  alignment: Alignment.center,
-                  child: Text('cart is empty'));
+                  alignment: Alignment.center, child: Text('cart is empty'));
             if (snap.hasData) {
               return SafeArea(
                 child: Container(
@@ -136,10 +135,6 @@ class checkout_order_screens extends StatelessWidget {
                                                     children: [
                                                       IconButton(
                                                           onPressed: () {
-                                                            selectedIndex =
-                                                                index;
-                                                            cart.isdelete =
-                                                                true;
                                                             print(
                                                                 cart.cartvalue);
                                                             quantity == 1
@@ -150,16 +145,10 @@ class checkout_order_screens extends StatelessWidget {
                                                                         remove);
                                                             print('remove');
                                                           },
-                                                          icon: cart.isdelete
-                                                              ? dashboardwidget()
-                                                                  .cicularbar()
-                                                              : Icon(Icons
-                                                                  .remove)),
-                                                      cart.cartvalue
-                                                          ? dashboardwidget()
-                                                              .cicularbar()
-                                                          : Text(
-                                                              '${snap.data['AllcartSRecords'][index]['quantity']}'),
+                                                          icon: Icon(
+                                                              Icons.remove)),
+                                                      Text(
+                                                          '${snap.data['AllcartSRecords'][index]['quantity']}'),
                                                       IconButton(
                                                           onPressed: () {
                                                             cart.cartvalue =

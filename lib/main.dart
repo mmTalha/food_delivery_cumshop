@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 import 'onboarding_screens/onboarding.dart';
 
-void main() {
+void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor:Colors.transparent,
   ));
@@ -23,6 +23,8 @@ void main() {
         ChangeNotifierProvider(create: (_) => api_calls()),
         ChangeNotifierProvider(create: (_) => location_provider()),
       ],
+
+
       child:   MyApp(),
     ),
   );
@@ -32,7 +34,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Cumshop',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor:  Color.fromRGBO(250,249,249, 1),
